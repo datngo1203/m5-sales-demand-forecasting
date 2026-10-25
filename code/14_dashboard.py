@@ -87,7 +87,13 @@ def main():
                                        (predictions.item_id == item) & (predictions.split == split)]
     selected_metrics = metrics[(metrics.store_id == store) & (metrics.split == split) &
                                metrics.item_id.isin([item, "ALL"])]
-    strategy = "trực tiếp" if reports[1].get("selected_params", {}).get("strategy") == "direct" else "đệ quy"
+    is_v2 = reports[1].get("pipeline_version") == "v2"
+    candidate = reports[1].get("selected_candidate")
+    labels = {"blend": "blend cố định 0,5 RF + 0,5 trung bình 4 tuần cùng thứ",
+              "weekday_mean4": "trung bình 4 tuần cùng thứ", "random_forest": "RF đệ quy",
+              "rf_calibrated": "RF nhân k từ validation của cửa hàng/panel này"}
+    strategy = (labels.get(candidate, candidate) if is_v2 else
+                ("trực tiếp" if reports[1].get("selected_params", {}).get("strategy") == "direct" else "đệ quy"))
     st.caption(f"{item} · {split} · Mốc dự báo: {selected_predictions.origin_date.min():%d/%m/%Y} · "
                f"28 ngày dự báo {strategy}, không cập nhật lượng bán thật trong cửa sổ.")
     if selected_history.empty:
@@ -96,10 +102,15 @@ def main():
     comparison = selected_predictions.pivot(index="date", columns="model", values="prediction")
     comparison["actual"] = selected_predictions.groupby("date").actual.first()
     st.line_chart(comparison, x_label="Ngày", y_label="Lượng bán thực tế / dự báo")
-    st.caption("seasonal_naive: lặp tuần trước · random_forest: hồi quy · "
+    st.caption(("seasonal_naive: lặp tuần trước · weekday_mean4: trung bình 4 tuần cùng thứ · "
+                "random_forest: thành phần RF · selected_forecast: thủ tục V3 đã đóng băng · actual: thực tế")
+               if is_v2 else "seasonal_naive: lặp tuần trước · random_forest: hồi quy · "
                "selected_forecast: cách được chọn cho sản phẩm · actual: thực tế")
     choice = reports[1].get("selected_models", {}).get(item)
-    if choice:
+    if choice and is_v2:
+        st.caption(f"{item} dùng {labels.get(choice, choice)}. Ứng viên chọn từ validation CA_1/CA_2; "
+                   "không chọn lại bằng test. Mọi test V3 đã được xem; đây là đối chiếu hồi cứu.")
+    elif choice:
         st.caption(f"{item} dùng {'Random Forest' if choice == 'random_forest' else 'lặp tuần trước'}, "
                    "chọn bằng sai số trên bốn đợt validation trước test.")
     columns = ["item_id", "model", "observations", "mae", "rmse"]
@@ -117,7 +128,17 @@ def main():
                        file_name=f"{store}_{item}_{split}.csv", mime="text/csv")
     with st.expander("Cách đánh giá và giới hạn"):
         st.json({key: reports[1][key] for key in ("train", "validation", "test", "selected_params")})
-        st.write("So sánh lịch sử huấn luyện toàn bộ, 365 hoặc 180 ngày qua bốn đợt validation. "
+        if is_v2:
+            st.write("Pipeline V2 dùng thủ tục V3 đã đóng băng: RF 180 ngày và baseline trung bình 4 tuần cùng thứ. "
+                     "13 origin validation cách 7 ngày được chia 4 nhóm; các nhóm chồng lấp nên không độc lập. "
+                     "Lựa chọn đã qua cổng MAE và độ lớn bias trên cả hai panel của ba cửa hàng. "
+                     "Nếu dùng RF×k, k chỉ fit từ validation của chính cửa hàng/panel, không từ test. "
+                     "Dashboard công bố seed42; số liệu nghiên cứu là trung bình ba seed. "
+                     "Validation hiển thị là cửa sổ cuối, không phải holdout độc lập. "
+                     "Mọi test V3 đã xem; không gọi là test tươi nữa. Chỉ dự báo lượng bán quan sát, "
+                     "không kết luận hết hàng hoặc nhu cầu tiềm ẩn. Xem docs/review/V3_RESULTS.md.")
+        else:
+            st.write("So sánh lịch sử huấn luyện toàn bộ, 365 hoặc 180 ngày qua bốn đợt validation. "
                  "Thử thêm RF dự báo trực tiếp đủ 28 ngày để tránh truyền dự báo vào đầu vào ngày sau. "
                  "Chọn cấu hình RF chung, rồi chọn baseline hoặc RF cho từng sản phẩm bằng MAE validation. "
                  "Validation hiển thị là đợt cuối, đã tham gia lựa chọn nên không phải kiểm tra độc lập. "

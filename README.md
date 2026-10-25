@@ -17,7 +17,8 @@ GuiDat/                    Mã và dữ liệu của thành viên còn lại
 SPEC.md                    Spec v1 và các giả định
 code/11_inspect_input.py    Kiểm tra đầu vào, đã bổ sung
 code/12_spark_analysis.py   Tổng hợp bán hàng bằng Spark
-code/13_forecasting.py      Chọn 20 chuỗi, dự báo và đánh giá
+code/13_forecasting.py      V1: chọn 20 chuỗi, dự báo và đánh giá
+code/15_forecasting_v3.py   V2 mặc định: blend đã qua cổng V3, tái dùng cache
 code/14_dashboard.py        Demo Streamlit đọc CSV tổng hợp
 run_pipeline.ps1            Chạy lại bước 1–3 và toàn bộ kiểm tra
 tests/test_inspect_input.py Kiểm tra script đầu vào
@@ -187,7 +188,13 @@ Các phiên bản kết quả trước khi cải tiến được giữ local t�
 Dashboard đọc CSV/JSON nhỏ, không huấn luyện khi đổi bộ lọc. Chọn cửa hàng/nhóm/ngày để xem
 thống kê bán hàng; chọn sản phẩm và test/validation để xem dự báo, sai số và tổng dư/thiếu.
 Bộ lọc ngày chỉ áp dụng doanh thu và lịch sử; đánh giá luôn dùng đủ 28 ngày.
-Hiện chỉ CA_1 có dự báo; chạy `13_forecasting.py --store CA_2` để tạo lại cho cửa hàng khác.
+Dashboard hiển thị store/panel của bộ CSV đang mở. Pipeline mặc định dùng V2:
+blend 0,5 RF + 0,5 trung bình 4 tuần cùng thứ, panel recent, công bố seed42.
+Thủ tục đã qua cổng trên CA_3, TX_1, WI_1; mọi test trong báo cáo hiện đều đã xem.
+Xem [kế hoạch](docs/review/V3_PLAN.md) và [kết quả V3](docs/review/V3_RESULTS.md).
+`code/15_forecasting_v3.py --store CA_3 --panel legacy` tái dùng kết quả đã có;
+store mới fit RF và ước lượng k từ validation của chính nó, không chọn lại ứng viên.
+Các lệnh chạy trực tiếp `code/13_forecasting.py` ở phần trên vẫn là V1.
 Chạy lại ghi đè kết quả dự báo cũ, nên không chạy khi đang dùng dashboard để trình bày.
 Dashboard cũng giải thích cách chọn mô hình và giới hạn đánh giá.
 
@@ -195,6 +202,10 @@ Dashboard cũng giải thích cách chọn mô hình và giới hạn đánh gi�
 
 ```powershell
 .\run_pipeline.ps1 -SkipInstall
+# Giữ cách chạy V1 nguyên bản:
+.\run_pipeline.ps1 -SkipInstall -V1
+# Đổi store/panel V2:
+.\run_pipeline.ps1 -SkipInstall -Store TX_1 -Panel legacy
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 

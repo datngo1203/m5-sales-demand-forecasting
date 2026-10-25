@@ -127,15 +127,51 @@ def main():
         "độc lập; kết quả có thể cùng chịu bối cảnh chung. Hai panel không cùng tập sản phẩm; "
         "không diễn giải đổi panel là tác động nhân quả. "
         "Không thêm thư viện hoặc tìm siêu tham số mới.")
+    add()
+    add("## Bàn giao tích hợp Pha 4")
+    add()
+    if decision["integrate"]:
+        add("`run_pipeline.ps1` mặc định gọi `code/15_forecasting_v3.py` (V2, blend đóng băng, "
+            "panel recent, seed42). `-V1` gọi `code/13_forecasting_v1.py` nguyên bản; "
+            "`code/13_forecasting.py` cũng giữ nguyên để tương thích các lệnh V1 trực tiếp. "
+            "`-Store` và `-Panel` đổi bộ dữ liệu, không chọn lại ứng viên. Các tên file/cột "
+            "history/predictions/metrics CSV dashboard đọc giữ nguyên; thêm hàng weekday_mean4 và "
+            "metadata phiên bản/tên candidate. Dashboard đã cập nhật nhãn blend, k, validation và "
+            "giới hạn test để không gọi blend là RF hoặc validation độc lập.")
+        add()
+        add("```powershell\n.\\run_pipeline.ps1 -SkipInstall\n.\\run_pipeline.ps1 -SkipInstall -V1\n"
+            ".\\run_pipeline.ps1 -SkipInstall -Store TX_1 -Panel legacy\n"
+            "# Chỉ xuất lại cache, không chạy lại phân tích Spark hoặc train kết quả đã có:\n"
+            ".\\.venv\\Scripts\\python.exe code/15_forecasting_v3.py --store CA_1 --panel recent\n```")
+        add()
+        add("Đã công bố lại `outputs/forecast` từ cache CA_1/recent, không fit RF lại. "
+            "Bộ V1 trước đó được sao lưu nguyên file ở `outputs/forecast_v1_retained`, đã đối chiếu hash. "
+            "Không xuất lại model blend pickle; JSON ghi rõ file random_forest.joblib V1 còn tồn tại "
+            "không phải model V2 được chọn. Dashboard dùng CSV/JSON. Kết quả nghiên cứu vẫn ba seed; "
+            "artifact demo chỉ seed42 để mỗi item/ngày/model có một dòng. Khi store thực sự chưa có cache, "
+            "pipeline fit RF theo giao thức cố định và tính k từ validation riêng, rồi lưu cache để không fit lại.")
+        add()
+        add("Kiểm tra: 33 unittest đạt trước commit cuối, gồm V1/Spark/dashboard cũ, mutation 1e9, "
+            "selection/cổng, guard test, schema CSV, cache không fit lại, nhánh store mới tự tính k bằng "
+            "fixture không cần output V2. Dashboard chạy được với cache thật CA_1/recent và TX_1/legacy; "
+            "dự báo xuất TX_1/legacy khớp từng giá trị blend đã test. Đã kiểm cú pháp PowerShell, CLI help "
+            "V1/V2, 2016 dòng bias h khớp 72 seed metric, và hash thủ tục dự báo không đổi từ freeze. "
+            "Nhật ký trước/sau từng commit: `.runtime/v3_phase{1..4}_{pre,post}.log`.")
+        add()
+        add("Không chạy lại toàn bộ phân tích 58 triệu dòng hoặc grid search V1 trong Pha 4, "
+            "vì đã có kết quả; nhánh bootstrap store mới được kiểm bằng fixture, chưa train store thứ tư. "
+            "Không push, không merge main. Chạy lại report/chẩn đoán từ cache không phải lượt test mới.")
     docs=ROOT/"docs/review"
     (docs/"V3_RESULTS.md").write_text("\n".join(lines)+"\n",encoding="utf-8")
     for src,dest in (("test_metrics.csv","V3_TEST_METRICS.csv"),("test_seed_metrics.csv","V3_SEED_METRICS.csv"),
                      ("test_bias_by_h.csv","V3_BIAS_BY_H.csv")):
         (docs/dest).write_bytes((out/src).read_bytes())
     dump(docs/"V3_INTEGRATION.json",decision)
-    dump(docs/"V3_AUDIT.json",{"test_started":started,"test_complete":complete,
+    audit=read(docs/"V3_AUDIT.json") if (docs/"V3_AUDIT.json").exists() else {}
+    audit.update({"test_started":started,"test_complete":complete,
         "development_reused":True,"test_single_pass":True,
         "frozen_procedure_current":fingerprint([ROOT/p for p in frozen["procedure_hashes"]])==frozen["procedure_hashes"]})
+    dump(docs/"V3_AUDIT.json",audit)
     print("Published V3 results from cached metrics")
 
 

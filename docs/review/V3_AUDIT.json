@@ -41,5 +41,23 @@
   },
   "development_reused": true,
   "test_single_pass": true,
-  "frozen_procedure_current": true
+  "frozen_procedure_current": true,
+  "horizon_rows_checked": 2016,
+  "seed_metrics_checked": 72,
+  "selection_recomputed": true,
+  "default_export": {
+    "candidate": "blend",
+    "store": "CA_1",
+    "panel": "recent",
+    "seed": 42,
+    "reused": true
+  },
+  "v1_backup_hashes_verified": true,
+  "source_features_unchanged_since_freeze": true,
+  "dashboard_smoke": [
+    "CA_1/recent",
+    "TX_1/legacy"
+  ],
+  "unittest_before_phase4": "33/33 passed",
+  "v1_reference_sha256": "426009d84155d09a71a1fbbf6224236b65bb5dac567d09b68a4e113e9ba64b81"
 }

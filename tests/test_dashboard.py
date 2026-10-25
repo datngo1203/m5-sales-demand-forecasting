@@ -70,6 +70,28 @@ class DashboardTests(unittest.TestCase):
             self.assertFalse(app.exception)
             self.assertIn("Không đọc được kết quả", app.error[0].value)
 
+    def test_v2_blend_label_and_weekday_baseline_remain_compatible(self):
+        with tempfile.TemporaryDirectory() as folder, patch.dict(os.environ,{"M5_OUTPUT_DIR":folder}):
+            self.fixture(folder)
+            path=Path(folder)/"forecast/forecast_report.json"
+            report=json.loads(path.read_text())
+            report.update(pipeline_version="v2",selected_candidate="blend",
+                          selected_models={"item1":"blend","item2":"blend"},selected_params={"strategy":"blend"})
+            path.write_text(json.dumps(report),encoding="utf-8")
+            for filename in ("predictions.csv","metrics.csv"):
+                target=Path(folder)/"forecast"/filename
+                data=pd.read_csv(target)
+                extra=data[data.model=="seasonal_naive"].copy()
+                extra["model"]="weekday_mean4"
+                pd.concat([data,extra]).to_csv(target,index=False)
+            app=AppTest.from_file(str(APP),default_timeout=20).run()
+            self.assertFalse(app.exception)
+            captions=" ".join(c.value for c in app.caption)
+            self.assertIn("blend cố định 0,5",captions)
+            self.assertIn("thủ tục V3 đã đóng băng",captions)
+            self.assertIn("weekday_mean4",app.dataframe[1].value.columns)
+            self.assertEqual(len(app.get("arrow_vega_lite_chart")),4)
+
     def test_date_filter_updates_sales_without_changing_evaluation(self):
         with tempfile.TemporaryDirectory() as folder, patch.dict(os.environ, {"M5_OUTPUT_DIR": folder}):
             self.fixture(folder)

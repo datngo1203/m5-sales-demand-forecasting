@@ -1,4 +1,5 @@
-param([switch]$SkipInstall)
+param([switch]$SkipInstall, [switch]$V1, [string]$Store = 'CA_1',
+      [ValidateSet('recent', 'legacy')][string]$Panel = 'recent')
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
 $python = Join-Path $PSScriptRoot '.venv/Scripts/python.exe'
@@ -18,10 +19,15 @@ if (-not $SkipInstall) {
 }
 & $python -m pip check 2>&1 | Tee-Object -FilePath outputs/pipeline_dependencies.log
 if ($LASTEXITCODE -ne 0) { throw 'Phu thuoc khong tuong thich. Xem outputs/pipeline_dependencies.log.' }
-foreach ($script in @('11_inspect_input.py', '12_spark_analysis.py', '13_forecasting.py')) {
+foreach ($script in @('11_inspect_input.py', '12_spark_analysis.py')) {
     & $python (Join-Path 'code' $script) 2>&1 | Tee-Object -FilePath "outputs/pipeline_$script.log"
     if ($LASTEXITCODE -ne 0) { throw "Buoc $script that bai. Xem log trong outputs." }
 }
+$forecastScript = if ($V1) { '13_forecasting_v1.py' } else { '15_forecasting_v3.py' }
+$forecastArgs = @('--store', $Store)
+if (-not $V1) { $forecastArgs += @('--panel', $Panel) }
+& $python (Join-Path 'code' $forecastScript) @forecastArgs 2>&1 | Tee-Object -FilePath "outputs/pipeline_$forecastScript.log"
+if ($LASTEXITCODE -ne 0) { throw "Buoc $forecastScript that bai. Xem log trong outputs." }
 & $python -m unittest discover -s tests -v 2>&1 | Tee-Object -FilePath outputs/pipeline_tests.log
 if ($LASTEXITCODE -ne 0) { throw 'Kiem tra that bai. Xem outputs/pipeline_tests.log.' }
 Write-Output 'Thanh cong. Mo demo: .\.venv\Scripts\python.exe -m streamlit run code\14_dashboard.py'

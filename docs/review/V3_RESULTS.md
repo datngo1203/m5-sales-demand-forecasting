@@ -121,3 +121,21 @@ Không lặp lệnh test trên output đã tiêu thụ: test_started tạo độ
 ## Giới hạn
 
 Thiết kế đã chịu ảnh hưởng chẩn đoán hồi cứu. Validation 13 origin chồng giữa nhóm nên không phải 13 mẫu độc lập; không tính CI giả định độc lập. Ba seed không thay thế ba dataset độc lập. RF×k in-sample validation có lạc quan, không được kết luận hiệu chỉnh tốt trên test khi không được chọn để đánh giá. Tổng tuần giỏ CA_1 legacy không đại diện toàn store hoặc panel riêng. Bảng tuần sau test làm lộ thêm tổng gộp của các store khác; không gọi những tổng này là dữ liệu chưa xem cho thí nghiệm sau. Không suy ra stockout hoặc nhân quả từ scale thấp, chuỗi 0 hay lễ. Ba store dùng cùng khoảng lịch test trong cùng dataset, không phải thử trên một giai đoạn tương lai độc lập; kết quả có thể cùng chịu bối cảnh chung. Hai panel không cùng tập sản phẩm; không diễn giải đổi panel là tác động nhân quả. Không thêm thư viện hoặc tìm siêu tham số mới.
+
+## Bàn giao tích hợp Pha 4
+
+`run_pipeline.ps1` mặc định gọi `code/15_forecasting_v3.py` (V2, blend đóng băng, panel recent, seed42). `-V1` gọi `code/13_forecasting_v1.py` nguyên bản; `code/13_forecasting.py` cũng giữ nguyên để tương thích các lệnh V1 trực tiếp. `-Store` và `-Panel` đổi bộ dữ liệu, không chọn lại ứng viên. Các tên file/cột history/predictions/metrics CSV dashboard đọc giữ nguyên; thêm hàng weekday_mean4 và metadata phiên bản/tên candidate. Dashboard đã cập nhật nhãn blend, k, validation và giới hạn test để không gọi blend là RF hoặc validation độc lập.
+
+```powershell
+.\run_pipeline.ps1 -SkipInstall
+.\run_pipeline.ps1 -SkipInstall -V1
+.\run_pipeline.ps1 -SkipInstall -Store TX_1 -Panel legacy
+# Chỉ xuất lại cache, không chạy lại phân tích Spark hoặc train kết quả đã có:
+.\.venv\Scripts\python.exe code/15_forecasting_v3.py --store CA_1 --panel recent
+```
+
+Đã công bố lại `outputs/forecast` từ cache CA_1/recent, không fit RF lại. Bộ V1 trước đó được sao lưu nguyên file ở `outputs/forecast_v1_retained`, đã đối chiếu hash. Không xuất lại model blend pickle; JSON ghi rõ file random_forest.joblib V1 còn tồn tại không phải model V2 được chọn. Dashboard dùng CSV/JSON. Kết quả nghiên cứu vẫn ba seed; artifact demo chỉ seed42 để mỗi item/ngày/model có một dòng. Khi store thực sự chưa có cache, pipeline fit RF theo giao thức cố định và tính k từ validation riêng, rồi lưu cache để không fit lại.
+
+Kiểm tra: 33 unittest đạt trước commit cuối, gồm V1/Spark/dashboard cũ, mutation 1e9, selection/cổng, guard test, schema CSV, cache không fit lại, nhánh store mới tự tính k bằng fixture không cần output V2. Dashboard chạy được với cache thật CA_1/recent và TX_1/legacy; dự báo xuất TX_1/legacy khớp từng giá trị blend đã test. Đã kiểm cú pháp PowerShell, CLI help V1/V2, 2016 dòng bias h khớp 72 seed metric, và hash thủ tục dự báo không đổi từ freeze. Nhật ký trước/sau từng commit: `.runtime/v3_phase{1..4}_{pre,post}.log`.
+
+Không chạy lại toàn bộ phân tích 58 triệu dòng hoặc grid search V1 trong Pha 4, vì đã có kết quả; nhánh bootstrap store mới được kiểm bằng fixture, chưa train store thứ tư. Không push, không merge main. Chạy lại report/chẩn đoán từ cache không phải lượt test mới.
