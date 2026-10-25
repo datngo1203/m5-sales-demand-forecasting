@@ -1,0 +1,91 @@
+{
+  "created_at_utc": "2026-10-25T17:46:40.164440+00:00",
+  "config": {
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "window_days": 180,
+    "selection_date": "2015-12-06",
+    "rf": {
+      "n_estimators": 100,
+      "max_depth": 12,
+      "min_samples_leaf": 5,
+      "n_jobs": 2
+    },
+    "direct": {
+      "loss": "poisson",
+      "learning_rate": 0.1,
+      "max_iter": 100,
+      "max_leaf_nodes": 15,
+      "min_samples_leaf": 20,
+      "l2_regularization": 1.0,
+      "early_stopping": false
+    },
+    "gate": {
+      "required_wins": 9,
+      "mae_ratio_limit": 1.03
+    },
+    "sparse_days": 28,
+    "zero_run": 14,
+    "sensitivity_top_items": 10
+  },
+  "code_hashes": {
+    "code/forecast_v2.py": "061d6ae00e9470c62914ab47c265bd3efe083e0f93cd7353d4f4dfadbed3f49d",
+    "code/v2_panel.py": "c9c0bcf156008e926ac395c71d56b5fb4301f427f3059ff460eaba5a07cf8edc",
+    "code/13_forecasting_v1.py": "426009d84155d09a71a1fbbf6224236b65bb5dac567d09b68a4e113e9ba64b81",
+    "scripts/run_forecast_v2.py": "0d0525239f30f804537f5791c46123e67d4c6c169c5d52fec08a42536cb20ff9",
+    "docs/review/V2_PLAN.md": "ecd71dd15d78ae216a302ab6fe42aa7cac21f9a3130bc32c3075494850c977fb"
+  },
+  "gates": {
+    "recent": {
+      "wins": 12,
+      "origins": 13,
+      "rf_score": 9.798553797532358,
+      "direct_score": 8.804396416702325,
+      "mae_ratio": 0.8985403967389147,
+      "passed": true
+    },
+    "legacy": {
+      "wins": 11,
+      "origins": 13,
+      "rf_score": 7.211608254865902,
+      "direct_score": 8.226202550003222,
+      "mae_ratio": 1.1406890473359728,
+      "passed": false
+    }
+  },
+  "step2_permitted": false,
+  "panels": {
+    "recent": {
+      "choice": "random_forest",
+      "k_by_seed": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "candidate_scores": {}
+    },
+    "legacy": {
+      "choice": "random_forest",
+      "k_by_seed": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "candidate_scores": {}
+    }
+  },
+  "prepared_sha256": {
+    "outputs/forecast_v2/prepared.json": "6eccc6c88a6244e15729a651f199d31a26204e78bd05696ca2850dc89b1737d4"
+  },
+  "validation_hashes": {
+    "outputs/forecast_v2/CA_1/recent/validation_predictions.npz": "0b391cb25b609c09a0aa1f8a72dd6b0f25344b08958058dcf20e82f4c2c68ce2",
+    "outputs/forecast_v2/CA_1/recent/validation_metrics.csv": "a44685b7e3b59f6750a1c4868834966ae557fee00afcaaa71d0066a20629594a",
+    "outputs/forecast_v2/CA_1/recent/validation_gate.json": "64c85739c03e1900bf6736d82bdd6dfcd2d3a97afa848e4a19fc5a7a05e2bd7b",
+    "outputs/forecast_v2/CA_1/legacy/validation_predictions.npz": "af8ce81cbcfc8e9e134ae2456c69a2be2dd15a38648084fa0ed49f7264e281fa",
+    "outputs/forecast_v2/CA_1/legacy/validation_metrics.csv": "f0f1297011d6192e36cc318075f3f10ea36e5d0d54da063b9dabc85505faacba",
+    "outputs/forecast_v2/CA_1/legacy/validation_gate.json": "c78ffed4ef70e64c6f0a99133637f1d035e96bee1b09997e4e7ef3098b3300a5"
+  }
+}

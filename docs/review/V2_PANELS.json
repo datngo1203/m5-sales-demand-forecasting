@@ -1,0 +1,594 @@
+[
+  {
+    "store": "CA_1",
+    "panel": "recent",
+    "selected": [
+      {
+        "item_id": "FOODS_3_090",
+        "train_units": 121612,
+        "recent_units": 10896,
+        "last28_units": 1587,
+        "rank": 1
+      },
+      {
+        "item_id": "FOODS_3_586",
+        "train_units": 82671,
+        "recent_units": 8617,
+        "last28_units": 1199,
+        "rank": 2
+      },
+      {
+        "item_id": "FOODS_3_120",
+        "train_units": 57224,
+        "recent_units": 8177,
+        "last28_units": 531,
+        "rank": 3
+      },
+      {
+        "item_id": "FOODS_3_252",
+        "train_units": 70281,
+        "recent_units": 7696,
+        "last28_units": 954,
+        "rank": 4
+      },
+      {
+        "item_id": "FOODS_3_064",
+        "train_units": 23075,
+        "recent_units": 5633,
+        "last28_units": 641,
+        "rank": 5
+      },
+      {
+        "item_id": "FOODS_3_587",
+        "train_units": 48119,
+        "recent_units": 5186,
+        "last28_units": 648,
+        "rank": 6
+      },
+      {
+        "item_id": "FOODS_3_714",
+        "train_units": 51437,
+        "recent_units": 4768,
+        "last28_units": 657,
+        "rank": 7
+      },
+      {
+        "item_id": "FOODS_3_282",
+        "train_units": 26079,
+        "recent_units": 4497,
+        "last28_units": 374,
+        "rank": 8
+      },
+      {
+        "item_id": "FOODS_3_499",
+        "train_units": 15121,
+        "recent_units": 3803,
+        "last28_units": 687,
+        "rank": 9
+      },
+      {
+        "item_id": "FOODS_3_362",
+        "train_units": 20559,
+        "recent_units": 3547,
+        "last28_units": 356,
+        "rank": 10
+      },
+      {
+        "item_id": "FOODS_3_555",
+        "train_units": 35461,
+        "recent_units": 3425,
+        "last28_units": 509,
+        "rank": 11
+      },
+      {
+        "item_id": "FOODS_3_080",
+        "train_units": 36679,
+        "recent_units": 3418,
+        "last28_units": 528,
+        "rank": 12
+      },
+      {
+        "item_id": "FOODS_3_741",
+        "train_units": 33550,
+        "recent_units": 3318,
+        "last28_units": 386,
+        "rank": 13
+      },
+      {
+        "item_id": "FOODS_3_099",
+        "train_units": 30892,
+        "recent_units": 3272,
+        "last28_units": 524,
+        "rank": 14
+      },
+      {
+        "item_id": "FOODS_3_681",
+        "train_units": 30447,
+        "recent_units": 3152,
+        "last28_units": 660,
+        "rank": 15
+      },
+      {
+        "item_id": "FOODS_2_197",
+        "train_units": 38412,
+        "recent_units": 3151,
+        "last28_units": 442,
+        "rank": 16
+      },
+      {
+        "item_id": "FOODS_3_785",
+        "train_units": 24815,
+        "recent_units": 2887,
+        "last28_units": 437,
+        "rank": 17
+      },
+      {
+        "item_id": "FOODS_3_501",
+        "train_units": 25096,
+        "recent_units": 2881,
+        "last28_units": 268,
+        "rank": 18
+      },
+      {
+        "item_id": "FOODS_2_019",
+        "train_units": 33076,
+        "recent_units": 2874,
+        "last28_units": 396,
+        "rank": 19
+      },
+      {
+        "item_id": "FOODS_3_702",
+        "train_units": 20606,
+        "recent_units": 2859,
+        "last28_units": 171,
+        "rank": 20
+      }
+    ],
+    "selection_date": "2015-12-06",
+    "history_end": "2016-03-27"
+  },
+  {
+    "store": "CA_1",
+    "panel": "legacy",
+    "selected": [
+      {
+        "item_id": "FOODS_3_090",
+        "train_units": 121612,
+        "recent_units": 10896,
+        "last28_units": 1587,
+        "rank": 1
+      },
+      {
+        "item_id": "FOODS_3_586",
+        "train_units": 82671,
+        "recent_units": 8617,
+        "last28_units": 1199,
+        "rank": 2
+      },
+      {
+        "item_id": "FOODS_3_252",
+        "train_units": 70281,
+        "recent_units": 7696,
+        "last28_units": 954,
+        "rank": 3
+      },
+      {
+        "item_id": "FOODS_3_120",
+        "train_units": 57224,
+        "recent_units": 8177,
+        "last28_units": 531,
+        "rank": 4
+      },
+      {
+        "item_id": "FOODS_3_714",
+        "train_units": 51437,
+        "recent_units": 4768,
+        "last28_units": 657,
+        "rank": 5
+      },
+      {
+        "item_id": "FOODS_3_587",
+        "train_units": 48119,
+        "recent_units": 5186,
+        "last28_units": 648,
+        "rank": 6
+      },
+      {
+        "item_id": "FOODS_3_808",
+        "train_units": 45721,
+        "recent_units": 2022,
+        "last28_units": 0,
+        "rank": 7
+      },
+      {
+        "item_id": "FOODS_2_197",
+        "train_units": 38412,
+        "recent_units": 3151,
+        "last28_units": 442,
+        "rank": 8
+      },
+      {
+        "item_id": "FOODS_3_080",
+        "train_units": 36679,
+        "recent_units": 3418,
+        "last28_units": 528,
+        "rank": 9
+      },
+      {
+        "item_id": "FOODS_3_541",
+        "train_units": 36222,
+        "recent_units": 1819,
+        "last28_units": 0,
+        "rank": 10
+      },
+      {
+        "item_id": "FOODS_3_555",
+        "train_units": 35461,
+        "recent_units": 3425,
+        "last28_units": 509,
+        "rank": 11
+      },
+      {
+        "item_id": "FOODS_3_635",
+        "train_units": 34498,
+        "recent_units": 1028,
+        "last28_units": 0,
+        "rank": 12
+      },
+      {
+        "item_id": "FOODS_3_741",
+        "train_units": 33550,
+        "recent_units": 3318,
+        "last28_units": 386,
+        "rank": 13
+      },
+      {
+        "item_id": "FOODS_2_019",
+        "train_units": 33076,
+        "recent_units": 2874,
+        "last28_units": 396,
+        "rank": 14
+      },
+      {
+        "item_id": "FOODS_3_318",
+        "train_units": 31619,
+        "recent_units": 1426,
+        "last28_units": 0,
+        "rank": 15
+      },
+      {
+        "item_id": "FOODS_3_099",
+        "train_units": 30892,
+        "recent_units": 3272,
+        "last28_units": 524,
+        "rank": 16
+      },
+      {
+        "item_id": "FOODS_3_681",
+        "train_units": 30447,
+        "recent_units": 3152,
+        "last28_units": 660,
+        "rank": 17
+      },
+      {
+        "item_id": "FOODS_3_202",
+        "train_units": 29192,
+        "recent_units": 2495,
+        "last28_units": 420,
+        "rank": 18
+      },
+      {
+        "item_id": "FOODS_3_319",
+        "train_units": 27602,
+        "recent_units": 755,
+        "last28_units": 0,
+        "rank": 19
+      },
+      {
+        "item_id": "FOODS_3_694",
+        "train_units": 27597,
+        "recent_units": 2208,
+        "last28_units": 404,
+        "rank": 20
+      }
+    ],
+    "selection_date": "2015-12-06",
+    "history_end": "2016-03-27"
+  },
+  {
+    "store": "CA_2",
+    "panel": "recent",
+    "selected": [
+      {
+        "item_id": "FOODS_3_252",
+        "train_units": 52518,
+        "recent_units": 8880,
+        "last28_units": 1151,
+        "rank": 1
+      },
+      {
+        "item_id": "FOODS_3_090",
+        "train_units": 51323,
+        "recent_units": 8434,
+        "last28_units": 1081,
+        "rank": 2
+      },
+      {
+        "item_id": "FOODS_3_586",
+        "train_units": 58308,
+        "recent_units": 8340,
+        "last28_units": 1258,
+        "rank": 3
+      },
+      {
+        "item_id": "FOODS_3_555",
+        "train_units": 28118,
+        "recent_units": 4769,
+        "last28_units": 737,
+        "rank": 4
+      },
+      {
+        "item_id": "FOODS_3_288",
+        "train_units": 17674,
+        "recent_units": 4339,
+        "last28_units": 858,
+        "rank": 5
+      },
+      {
+        "item_id": "FOODS_3_120",
+        "train_units": 8928,
+        "recent_units": 3914,
+        "last28_units": 796,
+        "rank": 6
+      },
+      {
+        "item_id": "FOODS_3_714",
+        "train_units": 18391,
+        "recent_units": 3768,
+        "last28_units": 562,
+        "rank": 7
+      },
+      {
+        "item_id": "FOODS_3_080",
+        "train_units": 26638,
+        "recent_units": 3664,
+        "last28_units": 469,
+        "rank": 8
+      },
+      {
+        "item_id": "FOODS_3_804",
+        "train_units": 23068,
+        "recent_units": 3584,
+        "last28_units": 432,
+        "rank": 9
+      },
+      {
+        "item_id": "FOODS_3_739",
+        "train_units": 16042,
+        "recent_units": 3480,
+        "last28_units": 709,
+        "rank": 10
+      },
+      {
+        "item_id": "FOODS_3_362",
+        "train_units": 11349,
+        "recent_units": 3250,
+        "last28_units": 395,
+        "rank": 11
+      },
+      {
+        "item_id": "FOODS_3_587",
+        "train_units": 17332,
+        "recent_units": 2948,
+        "last28_units": 401,
+        "rank": 12
+      },
+      {
+        "item_id": "FOODS_1_218",
+        "train_units": 26996,
+        "recent_units": 2898,
+        "last28_units": 424,
+        "rank": 13
+      },
+      {
+        "item_id": "FOODS_3_282",
+        "train_units": 9506,
+        "recent_units": 2856,
+        "last28_units": 360,
+        "rank": 14
+      },
+      {
+        "item_id": "FOODS_3_008",
+        "train_units": 4321,
+        "recent_units": 2786,
+        "last28_units": 145,
+        "rank": 15
+      },
+      {
+        "item_id": "FOODS_3_499",
+        "train_units": 7080,
+        "recent_units": 2745,
+        "last28_units": 395,
+        "rank": 16
+      },
+      {
+        "item_id": "FOODS_3_389",
+        "train_units": 12287,
+        "recent_units": 2675,
+        "last28_units": 333,
+        "rank": 17
+      },
+      {
+        "item_id": "FOODS_3_723",
+        "train_units": 15209,
+        "recent_units": 2439,
+        "last28_units": 282,
+        "rank": 18
+      },
+      {
+        "item_id": "FOODS_1_012",
+        "train_units": 17430,
+        "recent_units": 2429,
+        "last28_units": 453,
+        "rank": 19
+      },
+      {
+        "item_id": "FOODS_3_135",
+        "train_units": 2663,
+        "recent_units": 2079,
+        "last28_units": 299,
+        "rank": 20
+      }
+    ],
+    "selection_date": "2015-12-06",
+    "history_end": "2016-03-27"
+  },
+  {
+    "store": "CA_2",
+    "panel": "legacy",
+    "selected": [
+      {
+        "item_id": "FOODS_3_586",
+        "train_units": 58308,
+        "recent_units": 8340,
+        "last28_units": 1258,
+        "rank": 1
+      },
+      {
+        "item_id": "FOODS_3_252",
+        "train_units": 52518,
+        "recent_units": 8880,
+        "last28_units": 1151,
+        "rank": 2
+      },
+      {
+        "item_id": "FOODS_3_090",
+        "train_units": 51323,
+        "recent_units": 8434,
+        "last28_units": 1081,
+        "rank": 3
+      },
+      {
+        "item_id": "FOODS_3_555",
+        "train_units": 28118,
+        "recent_units": 4769,
+        "last28_units": 737,
+        "rank": 4
+      },
+      {
+        "item_id": "FOODS_1_218",
+        "train_units": 26996,
+        "recent_units": 2898,
+        "last28_units": 424,
+        "rank": 5
+      },
+      {
+        "item_id": "FOODS_3_080",
+        "train_units": 26638,
+        "recent_units": 3664,
+        "last28_units": 469,
+        "rank": 6
+      },
+      {
+        "item_id": "FOODS_3_808",
+        "train_units": 24732,
+        "recent_units": 3103,
+        "last28_units": 0,
+        "rank": 7
+      },
+      {
+        "item_id": "FOODS_3_804",
+        "train_units": 23068,
+        "recent_units": 3584,
+        "last28_units": 432,
+        "rank": 8
+      },
+      {
+        "item_id": "FOODS_3_635",
+        "train_units": 20492,
+        "recent_units": 2938,
+        "last28_units": 0,
+        "rank": 9
+      },
+      {
+        "item_id": "FOODS_3_541",
+        "train_units": 19739,
+        "recent_units": 2976,
+        "last28_units": 0,
+        "rank": 10
+      },
+      {
+        "item_id": "FOODS_3_319",
+        "train_units": 19327,
+        "recent_units": 3456,
+        "last28_units": 0,
+        "rank": 11
+      },
+      {
+        "item_id": "FOODS_3_714",
+        "train_units": 18391,
+        "recent_units": 3768,
+        "last28_units": 562,
+        "rank": 12
+      },
+      {
+        "item_id": "FOODS_3_288",
+        "train_units": 17674,
+        "recent_units": 4339,
+        "last28_units": 858,
+        "rank": 13
+      },
+      {
+        "item_id": "FOODS_1_012",
+        "train_units": 17430,
+        "recent_units": 2429,
+        "last28_units": 453,
+        "rank": 14
+      },
+      {
+        "item_id": "FOODS_3_587",
+        "train_units": 17332,
+        "recent_units": 2948,
+        "last28_units": 401,
+        "rank": 15
+      },
+      {
+        "item_id": "FOODS_3_318",
+        "train_units": 16123,
+        "recent_units": 1168,
+        "last28_units": 0,
+        "rank": 16
+      },
+      {
+        "item_id": "FOODS_3_739",
+        "train_units": 16042,
+        "recent_units": 3480,
+        "last28_units": 709,
+        "rank": 17
+      },
+      {
+        "item_id": "FOODS_3_228",
+        "train_units": 15641,
+        "recent_units": 1708,
+        "last28_units": 252,
+        "rank": 18
+      },
+      {
+        "item_id": "FOODS_3_491",
+        "train_units": 15306,
+        "recent_units": 1765,
+        "last28_units": 222,
+        "rank": 19
+      },
+      {
+        "item_id": "FOODS_3_723",
+        "train_units": 15209,
+        "recent_units": 2439,
+        "last28_units": 282,
+        "rank": 20
+      }
+    ],
+    "selection_date": "2015-12-06",
+    "history_end": "2016-03-27"
+  }
+]

@@ -1,0 +1,41 @@
+{
+  "frozen_at_utc": "2026-10-25T17:46:40.164440+00:00",
+  "test_started": {
+    "started_at_utc": "2026-10-25T17:48:58.279224+00:00",
+    "frozen_sha256": {
+      "outputs/forecast_v2/frozen.json": "a161bc9e3203bdb07ed74487ab50ed56cd5ed8c5bce9ddbcf6fa8bd8d7ae51ea"
+    }
+  },
+  "test_complete": {
+    "completed_at_utc": "2026-10-25T17:49:23.455766+00:00",
+    "frozen_sha256": {
+      "outputs/forecast_v2/frozen.json": "a161bc9e3203bdb07ed74487ab50ed56cd5ed8c5bce9ddbcf6fa8bd8d7ae51ea"
+    },
+    "stores": [
+      "CA_1",
+      "CA_2"
+    ]
+  },
+  "horizon_rows": 10080,
+  "seed_metric_rows": 360,
+  "origin_metric_rows": 780,
+  "checks": [
+    "all 28 horizon bias totals match aggregate metrics",
+    "bias = B_SN + delta for all summaries",
+    "CA_1 gates recomputed from CSV",
+    "freeze before single test pass",
+    "default V1 artifacts unchanged",
+    "V1 reference byte-identical to default",
+    "all predictive code hashes match pre-test freeze"
+  ],
+  "default_artifact_sha256": {
+    "outputs\\forecast\\forecast_report.json": "f62ab198cc4a21dc464ea03cfe686b0b2e379a6ed84a7c45ed5c06e3a7fc2342",
+    "outputs\\forecast\\history.csv": "5f288fa6bf79cd878e4e2e71c74796984177871f16630ed6a6ebf189825d9d04",
+    "outputs\\forecast\\metrics.csv": "fa50504efdea8f4972f7a62704a699b50d93225424b717756d71cc26fa999654",
+    "outputs\\forecast\\model_selection.csv": "3acda91b5ec7c91cc023297624b97a87c1667b0735c20662aa816ff2a0464ea1",
+    "outputs\\forecast\\predictions.csv": "0061676b7286b0b95c32a24164bbb859ff795513d849c8162b856780cccb2d42",
+    "outputs\\forecast\\random_forest.joblib": "508bbfb638766ad87d39394978c3bca14afcbf847031757dc1e2684904611228",
+    "outputs\\forecast\\rolling_metrics.csv": "c19f00c0e1997b2d3997ed26b2bb29b26a29b990dbf571dd3afa4a54bcccb905",
+    "outputs\\forecast\\selected_series.csv": "232acaeaf4f1e87dcd17742a80521bc42346f070f2aaffbb91b9cb640eff658d"
+  }
+}

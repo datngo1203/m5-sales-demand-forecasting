@@ -117,6 +117,27 @@ def main():
         "Đã chạy một lượt test cuối cho cả hai cửa hàng, hai panel và ba seed; "
         "không chỉnh tham số/ngưỡng/feature sau khi xem test.")
     add()
+    add("## Kết luận mô tả")
+    add()
+    def summary(store, panel, split, model):
+        return next(r for r in summaries if r["store"]==store and r["panel"]==panel and
+                    r["split"]==split and r["group"]=="all" and r["model"]==model)
+    baseline_wins=sum(summary(s,p,t,"weekday_mean4")["mae"] < summary(s,p,t,"seasonal_naive")["mae"]
+                      for s in ("CA_1","CA_2") for p in PANELS for t in ("validation","test"))
+    test_wins=sum(summary(s,p,"test","direct_poisson")["mae"] < summary(s,p,"test","random_forest")["mae"]
+                  for s in ("CA_1","CA_2") for p in PANELS)
+    add(f"- Baseline mới có MAE thấp hơn seasonal_naive cũ ở {baseline_wins}/8 tổ hợp "
+        "store/panel/split. Đây là đối chiếu cùng sản phẩm/ngày; bảng dưới ghi rõ mức thay đổi từng tổ hợp.")
+    add(f"- Raw direct có MAE thấp hơn RF ở {test_wins}/4 tổ hợp test. Kết quả test này không được dùng "
+        "để đảo quyết định validation; cổng chung đã trượt ở panel legacy CA_1 nên V2 frozen vẫn là RF.")
+    rf=summary("CA_2","recent","test","random_forest")
+    direct=summary("CA_2","recent","test","direct_poisson")
+    add(f"- Trên test tươi CA_2/recent, raw direct MAE {fmt(direct['mae'])} so với RF {fmt(rf['mae'])} "
+        f"({fmt(100*(direct['mae']/rf['mae']-1))}%), nhưng bias_pct là {fmt(direct['bias_pct'])}% "
+        f"so với RF {fmt(rf['bias_pct'])}%. Giảm Δ có dấu không bảo đảm giảm |bias|.")
+    add("- Đổi panel không cải thiện đồng đều: xem riêng metric recent và legacy dưới cùng RF. "
+        "Hai tập sản phẩm khác nhau nên không diễn giải chênh lệch đó là tác động nhân quả của cách chọn.")
+    add()
     add("## Cổng quyết định và cấu hình giữ lại")
     add()
     table(["Panel CA_1", "Origin Δ_direct < Δ_RF", "Điểm MAE RF", "Điểm MAE direct", "Tỷ số MAE", "Qua cổng"],
@@ -174,6 +195,12 @@ def main():
     table(["Store", "Panel", "Split", "Mô hình", "MAE", "RMSE", "Bias %", "B_SN", "Δ", "nRMSE"],
           [[r["store"],r["panel"],r["split"],"V1 RF" if r["model"]=="random_forest" else "V2 frozen"]+
            [fmt(r[m]) for m in ("mae","rmse","bias_pct","B_SN","delta_bias","normalized_rmse")] for r in headline])
+    add("## Toàn bộ đối chứng trên validation gộp và test")
+    add()
+    table(["Store", "Panel", "Split", "Mô hình", "MAE", "RMSE", "Bias %", "B_SN", "Δ", "nRMSE"],
+          [[r["store"],r["panel"],r["split"],r["model"]]+
+           [fmt(r[m]) for m in ("mae","rmse","bias_pct","B_SN","delta_bias","normalized_rmse")]
+           for r in summaries if r["group"]=="all" and r["model"]!="v2_frozen"])
     add("## Từng thay đổi giúp hoặc không giúp bao nhiêu")
     add()
     add("Chênh MAE = MAE mô hình − MAE RF cùng store/panel/split; âm là tốt hơn. "
@@ -189,6 +216,19 @@ def main():
         effects.append([r["store"],r["panel"],r["split"],r["model"],fmt(r["mae"]-ref["mae"]),
                         fmt(100*(r["mae"]/ref["mae"]-1)),fmt(r["bias_units"]-ref["bias_units"])])
     table(["Store", "Panel", "Split", "Đối chứng", "Chênh MAE", "Chênh MAE %", "Chênh bias đơn vị"], effects)
+    add("Riêng thay baseline: weekday_mean4 so với seasonal_naive cũ trên cùng sản phẩm/ngày:")
+    add()
+    baseline_effects=[]
+    for store in ("CA_1","CA_2"):
+        for panel in PANELS:
+            for split in ("validation","test"):
+                refs={m:next(r for r in summaries if r["store"]==store and r["panel"]==panel and
+                    r["split"]==split and r["group"]=="all" and r["model"]==m)
+                    for m in ("seasonal_naive","weekday_mean4")}
+                old,new=refs["seasonal_naive"],refs["weekday_mean4"]
+                baseline_effects.append([store,panel,split,fmt(new["mae"]-old["mae"]),
+                    fmt(100*(new["mae"]/old["mae"]-1)),fmt(new["rmse"]-old["rmse"])])
+    table(["Store","Panel","Split","Chênh MAE mới−cũ","Chênh MAE %","Chênh RMSE mới−cũ"],baseline_effects)
     add("Tác động thay panel được mô tả riêng dưới cùng RF (hai tập sản phẩm khác nhau, không phải "
         "thí nghiệm ghép cặp trên cùng nhãn):")
     add()
@@ -258,6 +298,16 @@ def main():
     add("Giới hạn: không kết luận nguyên nhân bán 0 hoặc suy bias giảm là sửa được nhu cầu tiềm ẩn. "
         "Đổi panel sau chẩn đoán là thiết kế đã xem trước. Chênh metric giữa panel chịu ảnh hưởng "
         "quy mô/thành phần; so thuật toán phải dùng cùng panel. Không phát biểu nhân quả từ các đối chứng này.")
+    add()
+    add("## Kiểm tra bàn giao")
+    add()
+    add("Bộ `python -m unittest discover -s tests -v` hiện có 24 test, gồm leakage mutation 1e9, "
+        "đối chiếu selector Spark, nhãn train direct, cổng/nhóm, guard freeze/test một lần, "
+        "schema và metric báo cáo, cùng các test dashboard/V1 cũ. Chạy trước và sau từng commit; "
+        "không commit khi test đỏ. [V2_AUDIT.json](V2_AUDIT.json) lưu mốc freeze/test và kết quả "
+        "đối chiếu 10080 dòng bias horizon với 360 seed summaries; cả 780 dòng metric từng origin "
+        "được lưu để tính lại cổng. Artifact dashboard gốc được so hash trước/sau và không thay đổi. "
+        "Bước 2 không chạy do cổng; các k=1 trong manifest là giá trị identity mặc định không fit/không áp dụng.")
     args.docs.mkdir(parents=True, exist_ok=True)
     for name, rows in (("V2_METRICS.csv",summaries),("V2_SEED_METRICS.csv",seeds),
                        ("V2_ORIGIN_METRICS.csv",origin_rows),("V2_BIAS_BY_H.csv",horizons)):
