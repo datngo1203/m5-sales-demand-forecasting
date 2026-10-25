@@ -1,5 +1,8 @@
 import importlib.util
+import hashlib
 from pathlib import Path
+from unittest.mock import patch
+import sys
 import tempfile
 import unittest
 
@@ -23,9 +26,30 @@ class InspectInputTests(unittest.TestCase):
             self.assertEqual(result["rows_from_all_footers"], 4)
             self.assertEqual(result["part_files"], 2)
             self.assertFalse(result["success_marker"])
+            self.assertEqual(result["status"], "success")
+            self.assertEqual([row["name"] for row in result["files"]],
+                             ["part-0.parquet", "part-1.parquet"])
+            for row in result["files"]:
+                data = (folder / row["name"]).read_bytes()
+                self.assertEqual(row["bytes"], len(data))
+                self.assertEqual(row["sha256"], hashlib.sha256(data).hexdigest())
+            self.assertEqual(module.inspect_input(folder)["files"], result["files"])
+            pq.write_table(pa.table({name: [3] for name in module.REQUIRED}), folder / "part-1.parquet")
+            self.assertNotEqual(module.inspect_input(folder)["files"][1]["sha256"],
+                                result["files"][1]["sha256"])
             pq.write_table(pa.table({"demand": [1]}), folder / "part-2.parquet")
             with self.assertRaisesRegex(ValueError, "missing columns"):
                 module.inspect_input(folder)
+
+    def test_failed_rerun_removes_old_success_and_records_versions(self):
+        self.assertEqual(module.package_versions()["pyarrow"], pa.__version__)
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "inventory.json"
+            output.write_text('{"status":"success"}', encoding="utf-8")
+            with patch.object(sys, "argv", ["inspect", "--input", directory, "--output", str(output)]):
+                with self.assertRaisesRegex(ValueError, "No Parquet"):
+                    module.main()
+            self.assertFalse(output.exists())
 
     def test_empty_folder_and_inconsistent_schema(self):
         with tempfile.TemporaryDirectory() as directory:

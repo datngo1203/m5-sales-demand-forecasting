@@ -1,0 +1,3 @@
+-r requirements-spark.txt
+numpy==2.1.3
+scikit-learn==1.5.2

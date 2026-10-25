@@ -1,6 +1,9 @@
-"""Inspect handed-over Parquet without loading the complete dataset into RAM."""
+"""Inspect metadata and hash handed-over Parquet without loading it all into RAM."""
 
 import argparse
+from datetime import datetime, timezone
+import hashlib
+from importlib.metadata import PackageNotFoundError, version
 import importlib.util
 import json
 import os
@@ -23,7 +26,11 @@ def inspect_input(directory):
     rows = 0
     first_schema = None
     sample = []
+    manifest = []
     for path in files:
+        with path.open("rb") as stream:
+            digest = hashlib.file_digest(stream, "sha256").hexdigest()
+        manifest.append({"name": path.name, "bytes": path.stat().st_size, "sha256": digest})
         with pq.ParquetFile(path) as part:
             schema = part.schema_arrow
             missing = REQUIRED - set(schema.names)
@@ -40,6 +47,9 @@ def inspect_input(directory):
         raise ValueError("Dataset contains no rows")
     return {
         "input": str(directory.resolve()),
+        "created_at_utc": datetime.now(timezone.utc).isoformat(),
+        "status": "success",
+        "files": manifest,
         "part_files": len(files),
         "bytes": sum(path.stat().st_size for path in files),
         "rows_from_all_footers": rows,
@@ -47,8 +57,18 @@ def inspect_input(directory):
         "success_marker": (directory / "_SUCCESS").is_file(),
         "first_part_sample": sample,
         "forecasting_features_in_archive": (directory.parent / "forecasting_features").is_dir(),
-        "check_scope": "All file footers and 5 sample rows; not a full quality scan",
+        "check_scope": "SHA-256 of all file bytes, all footers and 5 sample rows; not a full quality scan",
     }
+
+
+def package_versions():
+    result = {}
+    for name in ("pyarrow", "pyspark", "numpy", "scikit-learn", "pandas", "streamlit"):
+        try:
+            result[name] = version(name)
+        except PackageNotFoundError:
+            result[name] = None
+    return result
 
 
 def main():
@@ -56,9 +76,12 @@ def main():
     parser.add_argument("--input", type=Path, default=ROOT / "GuiDat/data/processed_m5")
     parser.add_argument("--output", type=Path, default=ROOT / "outputs/input_inventory.json")
     args = parser.parse_args()
+    args.output.unlink(missing_ok=True)
     result = inspect_input(args.input)
     result["environment"] = {
         "python": sys.version,
+        "platform": sys.platform,
+        "packages": package_versions(),
         "pyspark_installed": importlib.util.find_spec("pyspark") is not None,
         "java_on_path": shutil.which("java"),
         "java_home": os.environ.get("JAVA_HOME"),
