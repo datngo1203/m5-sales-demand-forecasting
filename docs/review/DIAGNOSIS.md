@@ -515,3 +515,147 @@ SHA-256 đầu vào phần bổ sung:
 - `outputs/forecast/history.csv`: `5f288fa6bf79cd878e4e2e71c74796984177871f16630ed6a6ebf189825d9d04`
 - `outputs/forecast/predictions.csv`: `0061676b7286b0b95c32a24164bbb859ff795513d849c8162b856780cccb2d42`
 - `outputs/forecast/selected_series.csv`: `232acaeaf4f1e87dcd17742a80521bc42346f070f2aaffbb91b9cb640eff658d`
+
+
+## Bổ sung 3
+
+Chẩn đoán chỉ đọc; tái dùng toàn bộ dự báo V2, không fit/predict lại. CA_1 và CA_2 test đều đã xem. Trung bình/tổng dự báo dưới đây đã lấy trung bình ba seed để tổng actual không bị đếm ba lần; contribution AE/SSE/NSSE lấy trung bình loss ba seed. Origin validation chồng giữa các nhóm; mọi tổng qua 13 origin là tổng lượt đánh giá, không phải tổng ngày duy nhất. Không kết luận nguyên nhân hoặc điều chỉnh cấu hình từ các bảng này.
+
+### 3.1. Direct Poisson trên CA_2 legacy validation
+
+Sản phẩm xếp theo SSE direct (không theo nhãn test mới):
+
+| Item | % AE direct | % SSE direct | Chênh AE direct−RF | Scale min..max | Origin scale=1 |
+| --- | --- | --- | --- | --- | --- |
+| FOODS_3_319 | 11.4864 | 26.1506 | 5747.2780 | 1.0000..25.9286 | 4 |
+| FOODS_3_635 | 11.6750 | 24.9830 | 5929.6284 | 1.0000..22.7500 | 4 |
+| FOODS_3_541 | 11.6198 | 21.2394 | 5527.7422 | 1.0000..27.7857 | 4 |
+| FOODS_3_090 | 10.8914 | 9.4851 | 3274.3633 | 1.0000..44.6071 | 1 |
+| FOODS_3_808 | 4.5165 | 2.4834 | 1346.5172 | 1.0000..13.3571 | 4 |
+| FOODS_3_252 | 5.4590 | 2.2921 | 670.5241 | 30.2857..43.0714 | 0 |
+| FOODS_3_586 | 5.1362 | 2.0717 | 591.8901 | 33.0714..47.4643 | 0 |
+| FOODS_3_318 | 3.4618 | 2.0429 | -2141.7926 | 1.0000..16.7500 | 10 |
+
+Mười cặp item/origin gây SSE lớn nhất:
+
+| Item | Origin | Scale | Ngày 0 trước origin | Run 0 trước | Tổng actual | Tổng direct | % SSE |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| FOODS_3_319 | 2016-01-24 | 25.8571 | 1 | 1 | 673.0000 | 3814.6697 | 17.5929 |
+| FOODS_3_635 | 2016-01-24 | 22.7500 | 1 | 1 | 521.0000 | 3449.9781 | 14.1014 |
+| FOODS_3_541 | 2016-01-24 | 27.7500 | 1 | 1 | 625.0000 | 3338.5796 | 12.2250 |
+| FOODS_3_635 | 2016-01-17 | 18.6786 | 8 | 8 | 479.0000 | 3080.8086 | 8.6150 |
+| FOODS_3_541 | 2016-01-17 | 20.2500 | 8 | 8 | 692.0000 | 2889.3383 | 5.9921 |
+| FOODS_3_319 | 2016-01-17 | 18.8571 | 8 | 8 | 699.0000 | 2436.3389 | 5.8857 |
+| FOODS_3_090 | 2015-12-06 | 38.6071 | 4 | 4 | 0.0000 | 1124.9728 | 1.5081 |
+| FOODS_3_090 | 2016-01-03 | 1.0000 | 28 | 28 | 983.0000 | 22.5271 | 1.3752 |
+| FOODS_3_090 | 2016-01-31 | 35.1071 | 3 | 3 | 1249.0000 | 281.3700 | 1.2698 |
+| FOODS_3_090 | 2016-01-10 | 7.3929 | 24 | 24 | 1109.0000 | 286.1841 | 1.2119 |
+
+**Bằng chứng:** scale=1 ở 31/260 cặp item/origin, chiếm 8.9710% SSE direct; run 0 trước origin ≥14 ngày ở 51/260 cặp, chiếm 15.3872% SSE. Hai nhóm có thể giao nhau, không cộng tỷ lệ. Scale thấp và chuỗi 0 đi cùng một số sai số lớn là liên hệ mô tả; không đủ chứng minh chuẩn hóa hoặc hết hàng gây lỗi. Loss Poisson/feature/model có thể cùng tác động; không chạy ablation hay train lại để quy nguyên nhân.
+
+### 3.2. Năm đóng góp lớn nhất vào normalized SSE của RF, panel recent
+
+#### CA_1 / validation
+
+| Item | % NSSE RF | Scale min | Scale median | Scale max | Tổng RF | Tổng actual |
+| --- | --- | --- | --- | --- | --- | --- |
+| FOODS_3_362 | 63.4686 | 1.0000 | 1.0000 | 12.7143 | 8528.2056 | 816.0000 |
+| FOODS_3_785 | 27.9265 | 1.0000 | 14.3929 | 15.6071 | 7808.7553 | 2129.0000 |
+| FOODS_3_090 | 7.9225 | 1.0000 | 43.3571 | 56.6786 | 13872.8373 | 14314.0000 |
+| FOODS_3_120 | 0.1141 | 18.9643 | 34.4286 | 44.4643 | 11191.1165 | 11958.0000 |
+| FOODS_3_501 | 0.1028 | 9.3929 | 16.8929 | 28.6429 | 7394.7567 | 8471.0000 |
+
+#### CA_1 / test
+
+| Item | % NSSE RF | Scale min | Scale median | Scale max | Tổng RF | Tổng actual |
+| --- | --- | --- | --- | --- | --- | --- |
+| FOODS_3_785 | 99.1719 | 1.0000 | 1.0000 | 1.0000 | 761.0931 | 108.0000 |
+| FOODS_3_120 | 0.2159 | 24.6071 | 24.6071 | 24.6071 | 1297.1380 | 1071.0000 |
+| FOODS_3_499 | 0.1007 | 10.7143 | 10.7143 | 10.7143 | 408.7154 | 411.0000 |
+| FOODS_3_702 | 0.0621 | 7.2857 | 7.2857 | 7.2857 | 239.1611 | 302.0000 |
+| FOODS_2_197 | 0.0580 | 15.5357 | 15.5357 | 15.5357 | 429.4417 | 559.0000 |
+
+#### CA_2 / validation
+
+| Item | % NSSE RF | Scale min | Scale median | Scale max | Tổng RF | Tổng actual |
+| --- | --- | --- | --- | --- | --- | --- |
+| FOODS_3_362 | 67.8295 | 1.0000 | 1.0000 | 14.1071 | 3990.2442 | 1228.0000 |
+| FOODS_3_090 | 24.0946 | 1.0000 | 27.3214 | 44.6071 | 9716.7361 | 11810.0000 |
+| FOODS_3_723 | 5.7324 | 1.0000 | 9.1071 | 12.6786 | 4966.1719 | 3537.0000 |
+| FOODS_3_008 | 0.5865 | 1.0000 | 4.5000 | 5.9286 | 1663.5756 | 878.0000 |
+| FOODS_3_282 | 0.3665 | 7.4643 | 16.0714 | 21.1071 | 6172.4479 | 5830.0000 |
+
+#### CA_2 / test
+
+| Item | % NSSE RF | Scale min | Scale median | Scale max | Tổng RF | Tổng actual |
+| --- | --- | --- | --- | --- | --- | --- |
+| FOODS_3_008 | 97.9798 | 1.0000 | 1.0000 | 1.0000 | 501.3522 | 0.0000 |
+| FOODS_3_499 | 0.7260 | 6.0714 | 6.0714 | 6.0714 | 150.7008 | 336.0000 |
+| FOODS_1_218 | 0.2249 | 8.2143 | 8.2143 | 8.2143 | 238.2149 | 294.0000 |
+| FOODS_3_282 | 0.1708 | 11.4643 | 11.4643 | 11.4643 | 489.5052 | 523.0000 |
+| FOODS_3_120 | 0.1297 | 10.1429 | 10.1429 | 10.1429 | 487.8079 | 545.0000 |
+
+NSSE là bình phương sai số sau chia scale, có thể cộng để tính tỷ trọng. nRMSE là căn MSE chuẩn hóa, không cộng tỷ trọng trực tiếp. Scale=1 khiến cùng sai số đơn vị có trọng số lớn hơn so với sản phẩm có mức bán quá khứ cao; đây là tính chất công thức, không tự chứng minh dự báo của item đó kém nhất theo MAE đơn vị hoặc nguyên nhân bán thấp.
+
+### 3.3. Tập trung bias RF trên validation
+
+#### CA_1 / recent: bias tổng 15448.4650; tổng phần dư dương theo item 18998.1486
+
+| Item | Bias | % bias tổng có dấu | % tổng phần dư dương |
+| --- | --- | --- | --- |
+| FOODS_3_362 | 7712.2056 | 49.9221 | 40.5945 |
+| FOODS_3_785 | 5679.7553 | 36.7658 | 29.8964 |
+| FOODS_3_702 | 1075.8754 | 6.9643 | 5.6631 |
+
+Top 3 cộng: 14467.8363 = 93.6523% bias tổng. Cặp item/origin last28_units≤28: 12/260, bias 6846.6535 (44.3193% tổng); riêng last28=0: 12/260, bias 6846.6535 (44.3193%). Nhóm đúng 0 nằm trong nhóm ≤28. Bias có dấu có thể bù trừ; tỷ trọng không phải phần MAE. Ngưỡng ≤28 chỉ mô tả, không dùng chọn rule hoặc tham số.
+
+#### CA_1 / legacy: bias tổng 6137.0636; tổng phần dư dương theo item 9798.4053
+
+| Item | Bias | % bias tổng có dấu | % tổng phần dư dương |
+| --- | --- | --- | --- |
+| FOODS_3_318 | 1714.7113 | 27.9403 | 17.4999 |
+| FOODS_3_541 | 1321.5151 | 21.5333 | 13.4870 |
+| FOODS_3_635 | 1261.0695 | 20.5484 | 12.8702 |
+
+Top 3 cộng: 4297.2960 = 70.0220% bias tổng. Cặp item/origin last28_units≤28: 30/260, bias 2889.9189 (47.0896% tổng); riêng last28=0: 27/260, bias 2069.6917 (33.7245%). Nhóm đúng 0 nằm trong nhóm ≤28. Bias có dấu có thể bù trừ; tỷ trọng không phải phần MAE. Ngưỡng ≤28 chỉ mô tả, không dùng chọn rule hoặc tham số.
+
+#### CA_2 / recent: bias tổng 12945.8061; tổng phần dư dương theo item 15325.4439
+
+| Item | Bias | % bias tổng có dấu | % tổng phần dư dương |
+| --- | --- | --- | --- |
+| FOODS_3_362 | 2762.2442 | 21.3370 | 18.0239 |
+| FOODS_3_120 | 1724.5407 | 13.3212 | 11.2528 |
+| FOODS_3_723 | 1429.1719 | 11.0397 | 9.3255 |
+
+Top 3 cộng: 5915.9568 = 45.6979% bias tổng. Cặp item/origin last28_units≤28: 13/260, bias 1015.9999 (7.8481% tổng); riêng last28=0: 11/260, bias 794.9697 (6.1408%). Nhóm đúng 0 nằm trong nhóm ≤28. Bias có dấu có thể bù trừ; tỷ trọng không phải phần MAE. Ngưỡng ≤28 chỉ mô tả, không dùng chọn rule hoặc tham số.
+
+#### CA_2 / legacy: bias tổng 9428.4042; tổng phần dư dương theo item 12914.3026
+
+| Item | Bias | % bias tổng có dấu | % tổng phần dư dương |
+| --- | --- | --- | --- |
+| FOODS_3_318 | 2632.0945 | 27.9166 | 20.3812 |
+| FOODS_3_491 | 1366.5337 | 14.4938 | 10.5816 |
+| FOODS_1_218 | 1244.7691 | 13.2023 | 9.6387 |
+
+Top 3 cộng: 5243.3973 = 55.6128% bias tổng. Cặp item/origin last28_units≤28: 31/260, bias -910.2971 (-9.6548% tổng); riêng last28=0: 29/260, bias -1192.0237 (-12.6429%). Nhóm đúng 0 nằm trong nhóm ≤28. Bias có dấu có thể bù trừ; tỷ trọng không phải phần MAE. Ngưỡng ≤28 chỉ mô tả, không dùng chọn rule hoặc tham số.
+
+### 3.4. Tổng tuần cùng giỏ 20 item quanh 27/03/2016
+
+Giỏ cố định = 20 item CA_1 legacy, dùng ở mọi store; không phải toàn store hoặc panel riêng của store. Tuần Thứ hai–Chủ nhật, t=−3..0: 29/02–27/03; t=1..4: 28/03–24/04/2016. Bốn tuần sau tại store chưa dùng được giữ kín đến khi lượt test V3 hoàn tất.
+
+| Store | t=-3 | t=-2 | t=-1 | t=0 | t=1 | t=2 | t=3 | t=4 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| CA_1 | 2272 | 2157 | 2625 | 2951 | 2858 | 2554 | 2471 | 2553 |
+| CA_2 | 2233 | 2316 | 1840 | 2560 | 2005 | 1928 | 1827 | 1961 |
+| CA_3 | 3897 | 3745 | 4112 | 4601 | giữ kín | giữ kín | giữ kín | giữ kín |
+| CA_4 | 1202 | 1171 | 1199 | 1282 | giữ kín | giữ kín | giữ kín | giữ kín |
+| TX_1 | 2138 | 2277 | 2354 | 2741 | giữ kín | giữ kín | giữ kín | giữ kín |
+| TX_2 | 3221 | 3121 | 3319 | 3444 | giữ kín | giữ kín | giữ kín | giữ kín |
+| TX_3 | 2727 | 2878 | 2979 | 2992 | giữ kín | giữ kín | giữ kín | giữ kín |
+| WI_1 | 1159 | 1149 | 1336 | 1356 | giữ kín | giữ kín | giữ kín | giữ kín |
+| WI_2 | 1842 | 1782 | 1849 | 1854 | giữ kín | giữ kín | giữ kín | giữ kín |
+| WI_3 | 2760 | 2759 | 3133 | 3062 | giữ kín | giữ kín | giữ kín | giữ kín |
+
+**Chưa công bố bốn tuần sau tại store mới** để bảo vệ test tươi; bổ sung sau test_complete. Các tổng không có danh tính khách hàng hay dữ liệu tồn kho; không dùng chúng quy nguyên nhân.
+
+Tái lập: `.venv/Scripts/python.exe scripts/diagnose_supplement3.py`; thêm `--reveal-after-test` chỉ sau khi guard V3 báo hoàn tất. Script chỉ đọc và in stdout. Không train lại V2; không sử dụng sell_price hoặc mask bán 0.
