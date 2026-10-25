@@ -1,0 +1,45 @@
+{
+  "test_started": {
+    "started_at_utc": "2026-10-25T18:38:16.725323+00:00",
+    "frozen_sha256": {
+      "outputs/forecast_v3/frozen.json": "3bc1b41af43ca25cad71c581fe3e81ddbb20688e251f6e265c391437167d4cbb"
+    }
+  },
+  "test_complete": {
+    "completed_at_utc": "2026-10-25T18:38:43.236573+00:00",
+    "frozen_sha256": {
+      "outputs/forecast_v3/frozen.json": "3bc1b41af43ca25cad71c581fe3e81ddbb20688e251f6e265c391437167d4cbb"
+    },
+    "integration": {
+      "stores": {
+        "CA_3": {
+          "passed": true,
+          "panels": {
+            "recent": true,
+            "legacy": true
+          }
+        },
+        "TX_1": {
+          "passed": true,
+          "panels": {
+            "recent": true,
+            "legacy": true
+          }
+        },
+        "WI_1": {
+          "passed": true,
+          "panels": {
+            "recent": true,
+            "legacy": true
+          }
+        }
+      },
+      "passed_stores": 3,
+      "required": 2,
+      "integrate": true
+    }
+  },
+  "development_reused": true,
+  "test_single_pass": true,
+  "frozen_procedure_current": true
+}

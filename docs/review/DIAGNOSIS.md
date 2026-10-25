@@ -647,15 +647,15 @@ Giỏ cố định = 20 item CA_1 legacy, dùng ở mọi store; không phải t
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | CA_1 | 2272 | 2157 | 2625 | 2951 | 2858 | 2554 | 2471 | 2553 |
 | CA_2 | 2233 | 2316 | 1840 | 2560 | 2005 | 1928 | 1827 | 1961 |
-| CA_3 | 3897 | 3745 | 4112 | 4601 | giữ kín | giữ kín | giữ kín | giữ kín |
-| CA_4 | 1202 | 1171 | 1199 | 1282 | giữ kín | giữ kín | giữ kín | giữ kín |
-| TX_1 | 2138 | 2277 | 2354 | 2741 | giữ kín | giữ kín | giữ kín | giữ kín |
-| TX_2 | 3221 | 3121 | 3319 | 3444 | giữ kín | giữ kín | giữ kín | giữ kín |
-| TX_3 | 2727 | 2878 | 2979 | 2992 | giữ kín | giữ kín | giữ kín | giữ kín |
-| WI_1 | 1159 | 1149 | 1336 | 1356 | giữ kín | giữ kín | giữ kín | giữ kín |
-| WI_2 | 1842 | 1782 | 1849 | 1854 | giữ kín | giữ kín | giữ kín | giữ kín |
-| WI_3 | 2760 | 2759 | 3133 | 3062 | giữ kín | giữ kín | giữ kín | giữ kín |
+| CA_3 | 3897 | 3745 | 4112 | 4601 | 3846 | 3975 | 4091 | 3844 |
+| CA_4 | 1202 | 1171 | 1199 | 1282 | 1201 | 1166 | 1109 | 1211 |
+| TX_1 | 2138 | 2277 | 2354 | 2741 | 2315 | 2602 | 2308 | 2408 |
+| TX_2 | 3221 | 3121 | 3319 | 3444 | 2989 | 2958 | 2818 | 2629 |
+| TX_3 | 2727 | 2878 | 2979 | 2992 | 2357 | 2535 | 2648 | 2411 |
+| WI_1 | 1159 | 1149 | 1336 | 1356 | 1127 | 1115 | 1234 | 1186 |
+| WI_2 | 1842 | 1782 | 1849 | 1854 | 1867 | 1952 | 1958 | 1717 |
+| WI_3 | 2760 | 2759 | 3133 | 3062 | 2910 | 2743 | 2988 | 2848 |
 
-**Chưa công bố bốn tuần sau tại store mới** để bảo vệ test tươi; bổ sung sau test_complete. Các tổng không có danh tính khách hàng hay dữ liệu tồn kho; không dùng chúng quy nguyên nhân.
+Bốn tuần sau của các store chưa dùng chỉ được đọc cho bảng này **sau** test_complete V3. Đây là mô tả sau đánh giá; không dùng thay ứng viên/thủ tục/cổng. Cùng biến động giữa store có thể là bối cảnh chung, nhưng không đủ kết luận nhân quả về lễ, giá, tồn kho hoặc nhu cầu tiềm ẩn.
 
 Tái lập: `.venv/Scripts/python.exe scripts/diagnose_supplement3.py`; thêm `--reveal-after-test` chỉ sau khi guard V3 báo hoàn tất. Script chỉ đọc và in stdout. Không train lại V2; không sử dụng sell_price hoặc mask bán 0.

@@ -1,0 +1,28 @@
+{
+  "stores": {
+    "CA_3": {
+      "passed": true,
+      "panels": {
+        "recent": true,
+        "legacy": true
+      }
+    },
+    "TX_1": {
+      "passed": true,
+      "panels": {
+        "recent": true,
+        "legacy": true
+      }
+    },
+    "WI_1": {
+      "passed": true,
+      "panels": {
+        "recent": true,
+        "legacy": true
+      }
+    }
+  },
+  "passed_stores": 3,
+  "required": 2,
+  "integrate": true
+}
