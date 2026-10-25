@@ -1,0 +1,16 @@
+{
+  "status": "success",
+  "predictions": 3360,
+  "metrics_recomputed": 126,
+  "rolling_rows": 640,
+  "checks": [
+    "unique keys",
+    "panel selected before earliest validation",
+    "actuals match history",
+    "fixed origins and horizons",
+    "weekly baseline",
+    "selected predictions match chosen model",
+    "all MAE/RMSE/bias recomputed independently",
+    "configuration and per-item choices match rolling validation"
+  ]
+}

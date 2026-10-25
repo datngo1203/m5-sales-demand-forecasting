@@ -113,168 +113,94 @@ Script từ chối tập rỗng, thiếu cột, ngày sai kiểu/null, mã sản
 - Bộ kiểm tra đạt **5/5**, gồm kiểm tra đầu vào và chạy Spark với dữ liệu nhỏ để kiểm tra tổng hợp, giá thiếu/không hợp lệ, nhóm không có giá, lượng bán 0 và đầu vào lỗi.
 - HDFS chưa chạy; phần dự báo được bổ sung ở bước 3 bên dưới, dashboard thuộc bước tiếp theo.
 
-## Chạy bước 3 bằng PowerShell
+## Dự báo và đánh giá
 
-Sau khi thiết lập `JAVA_HOME`, `PATH`, `SPARK_LOCAL_IP`, `PYSPARK_PYTHON` như bước 2:
+Sau khi chuẩn bị môi trường như trên, chạy:
 
 ```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements-forecast.txt
 .\.venv\Scripts\python.exe code\13_forecasting.py
-.\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-Mặc định cửa hàng `CA_1`; có thể đổi bằng `--store CA_2`. `--input`, `--output`, `--master`, `--driver-memory` giống bước 2. Spark đọc và kiểm tra toàn bộ đầu vào, xếp hạng tổng lượng bán **chỉ trong tập train**, chọn 20 sản phẩm trong cửa hàng (hòa điểm thì theo `item_id`), rồi gom dữ liệu ngày của 20 chuỗi sang Python. Không thu toàn bộ dữ liệu thô về Python. Script yêu cầu mỗi chuỗi được chọn có đúng một dòng mỗi ngày trên toàn khoảng dữ liệu; ngày thiếu/trùng bị từ chối, không tự điền lượng bán 0.
+Spark chọn 20 sản phẩm CA_1 bằng tổng lượng bán trước cửa sổ validation đầu tiên.
+Danh sách giữ cố định trong toàn bộ thí nghiệm; các chuỗi thiếu hoặc trùng ngày bị từ chối.
+Có bốn cửa sổ validation liên tiếp, mỗi cửa sổ 28 ngày, và 28 ngày cuối làm test.
+Mỗi cửa sổ dự báo từ một mốc cố định, không cập nhật lượng bán thật trong 28 ngày đó.
 
-Hai khoảng cuối lần lượt là validation 28 ngày và test 28 ngày; phần trước đó là train. Baseline `seasonal_naive` lặp tuần cuối đã biết. Random Forest dùng lag 1/7/14/28, trung bình 7/28 ngày trước, thứ/ngày trong năm/tháng, số ngày từ đầu chuỗi và mã sản phẩm one-hot. Giá, đặc trưng dự báo bàn giao và lượng bán tương lai không được dùng. RF chạy scikit-learn trên panel nhỏ sau khi Spark xử lý dữ liệu lớn.
+RF thử sáu cấu hình: lịch sử toàn bộ/365/180 ngày × hai bộ độ sâu và kích thước lá
+`(12, 5)` hoặc `(None, 2)`. Mỗi cấu hình có 100 cây, seed 42 và 2 workers.
+Chọn cấu hình theo MAE gộp bốn cửa sổ; hòa thì xét RMSE.
+Thử thêm một RF dự báo trực tiếp 28 đầu ra, dùng cửa sổ/độ sâu của cấu hình đệ quy tốt nhất.
+Chọn giữa bảy phương án RF bằng validation, rồi chọn baseline hoặc RF cho từng sản phẩm
+theo MAE gộp validation, hòa dùng baseline.
+Mô hình được fit lại trên dữ liệu trước test, với cửa sổ lịch sử đã chọn.
 
-RF dùng 100 cây, seed 42, 2 CPU workers; thử hai bộ `(max_depth=12, min_samples_leaf=5)` và `(max_depth=None, min_samples_leaf=2)`. Chọn bằng MAE validation rồi huấn luyện lại trên train+validation để đánh giá test một lần. Mỗi cửa sổ có một mốc dự báo cố định: ngày thứ hai trở đi dùng các dự báo đã sinh khi cần lag/trung bình, không cập nhật bằng thực tế trong cửa sổ. Khi sang test, lượng bán thật của validation đã thuộc quá khứ và được phép dùng. 28 ngày đầu lịch sử chỉ làm lag, không làm nhãn huấn luyện.
+Đặc trưng gồm lag 1/7/14/28, mean 7/28, lịch ngày, số ngày từ đầu chuỗi, mã sản phẩm,
+tỷ lệ ngày bán 0 trong 7/28 ngày, chuỗi ngày bán 0 liên tiếp tối đa 28 ngày và mean_7 trừ mean_28.
+Đặc trưng chỉ dùng quá khứ hoặc dự báo đã sinh. Chưa đưa giá, sự kiện, SNAP vào mô hình.
+RF dùng scikit-learn trên panel nhỏ; Spark vẫn kiểm tra và chọn panel từ toàn bộ dữ liệu.
 
-Kết quả tại `outputs/forecast/`:
+### Đầu ra tại outputs/forecast
 
 | File | Nội dung |
 |---|---|
-| `selected_series.csv` | 20 sản phẩm, thứ hạng và tổng lượng bán train |
-| `history.csv` | Lịch sử ngày của 20 chuỗi để bước dashboard dùng |
-| `predictions.csv` | Validation/test × hai mô hình, mốc dự báo, horizon 1–28, thực tế và dự báo |
-| `metrics.csv` | MAE/RMSE từng sản phẩm và `ALL` cho từng mô hình, từng tập |
-| `random_forest.joblib` | Mô hình đã huấn luyện lại trên train+validation |
-| `forecast_report.json` | Trạng thái, nguồn, phiên bản, cách chia ngày, tham số, độ đo, thời gian |
+| selected_series.csv | 20 sản phẩm và tổng lượng bán trước validation đầu tiên |
+| history.csv | Lịch sử ngày của panel |
+| rolling_metrics.csv | MAE/RMSE và dư/thiếu từng sản phẩm cho 7 phương án RF và baseline qua 4 cửa sổ |
+| model_selection.csv | Cách được chọn cho từng sản phẩm và MAE validation của baseline/RF |
+| predictions.csv | Thực tế và ba đường dự báo ở validation cuối và test |
+| metrics.csv | Sai số từng sản phẩm và ALL, tổng thực tế/dự báo, bias_units, bias_pct |
+| random_forest.joblib | RF đã fit lại trước test; đọc cùng thứ tự đặc trưng/sản phẩm trong report |
+| forecast_report.json | Tham số, mốc chia dữ liệu, lựa chọn, kết quả và môi trường |
 
-MAE/RMSE tính theo lượng bán/ngày/sản phẩm; `ALL` gộp các quan sát của 20 chuỗi, không tính sai số tổng cửa hàng. Dự báo RF là số thực không âm, không làm tròn trước khi đánh giá. Đây là dự báo **lượng bán quan sát được** trên nhóm bán nhiều của một cửa hàng; không đại diện mọi sản phẩm và không suy ra nhu cầu bị mất vì hết hàng. Không cam kết RF thắng baseline. Dự báo xuất là backtest 28 ngày có thực tế để đối chiếu, chưa phải dự báo sau ngày cuối dữ liệu.
+`seasonal_naive` lặp tuần cuối; `random_forest` dùng RF cho mọi sản phẩm;
+`selected_forecast` dùng baseline hoặc RF theo lựa chọn riêng từng sản phẩm.
+`bias_units = predicted_units - actual_units`; dương là dư, âm là thiếu.
+`bias_pct` là phần trăm so với tổng thực tế, để trống khi tổng thực tế bằng 0.
+ALL gộp các quan sát sản phẩm–ngày, không phải sai số tổng cửa hàng.
+Các cột bias cho biết dư/thiếu tổng lượng bán; RF không được hiệu chỉnh bằng số thực tế test.
 
-Chỉ coi lần chạy hoàn tất khi có `forecast_report.json` với `status=success`; báo cáo cũ bị xóa trước khi đọc dữ liệu, các file khác có thể dở dang nếu lỗi. Mô hình và thứ tự đặc trưng/sản phẩm được ghi trong report; chỉ nạp file joblib từ nguồn tin cậy. HDFS cần kiểm thử ở bước riêng.
+### Kết quả lần cải tiến
 
-### Kết quả bước 3 ngày 25/10/2026
+Cấu hình chọn: đệ quy, 180 ngày gần nhất, max_depth=12,
+min_samples_leaf=5.
+Danh sách sản phẩm được chốt sớm hơn bản trước, nên RF cũ được tính lại trên cùng panel để so sánh.
 
-Chạy thành công local trên **58.327.370 dòng**, chọn **20 sản phẩm của CA_1** bằng doanh số train. Panel có **38.260 dòng** (20 × 1.913 ngày). Train: **29/01/2011–28/02/2016**; validation: **29/02–27/03/2016**; test: **28/03–24/04/2016**. Có 36.580 mẫu train sau khi tạo lag; huấn luyện lại có 37.140 mẫu. Bộ RF được chọn: `max_depth=12`, `min_samples_leaf=5`.
+| Cách dự báo | MAE test | RMSE test | Dự báo dư hoặc thiếu |
+|---|---:|---:|---:|
+| RF cũ trên cùng panel | 7,53 | 10,69 | 20,10% |
+| Baseline | 8,36 | 12,61 | 13,11% |
+| RF sau cải tiến | 7,47 | 11,16 | 19,10% |
+| Cách chọn theo sản phẩm | 7,21 | 11,13 | 17,24% |
 
-| Tập | Mô hình | MAE | RMSE |
-|---|---|---:|---:|
-| Validation | Lặp tuần trước | 8,2875 | 15,1952 |
-| Validation | Random Forest | 7,0584 | 10,2581 |
-| Test | Lặp tuần trước | 8,0625 | 12,4043 |
-| Test | Random Forest | 7,0504 | 10,4685 |
+Validation đã được dùng để chọn mô hình; số của validation không phải đánh giá độc lập.
+Test cũ đã được xem trong quá trình chẩn đoán, nên đây là so sánh hồi cứu, không phải test mới chưa từng xem.
+Chưa suy ra khả năng tổng quát sang cửa hàng hoặc thời điểm khác; dự báo lượng bán quan sát được,
+không xác định được nhu cầu bị mất do hết hàng. Không cam kết RF luôn thắng baseline.
+Các phiên bản kết quả trước khi cải tiến được giữ local tại outputs/before_forecast_improvement.
 
-Trên test, RF giảm khoảng **12,6% MAE** và **15,6% RMSE** so với baseline. RF kết hợp lịch sử gần đây, lịch ngày và dữ liệu nhiều sản phẩm; chưa có thử nghiệm tách riêng đóng góp của từng nhóm đặc trưng. Kết quả chưa chứng minh mô hình tốt hơn ở cửa hàng, sản phẩm hay thời điểm khác. Tập test chỉ có một cửa sổ 28 ngày; chưa đánh giá cuốn chiếu nhiều mốc hoặc dự báo nhu cầu khi hết hàng.
-
-Thời gian xử lý **128,64 giây**, không gồm cài đặt/khởi động JVM, trên `local[2]`, driver `2g`, Python **3.11.9**, Spark **3.5.3**, Java **17.0.20.1**, NumPy **2.1.3**, scikit-learn **1.5.2**. Xuất **2.240 dòng dự báo** (validation + test × 20 sản phẩm × 28 ngày × 2 mô hình), **84 dòng độ đo**, danh sách lựa chọn, lịch sử và mô hình.
-
-Bộ kiểm tra đạt **9/9**, gồm 4 kiểm tra mới cho dự báo và 5 kiểm tra bước trước. Các kiểm tra mới bao gồm thay đổi dữ liệu tương lai không làm thay đổi mẫu train, dùng dự báo trước đó cho lag, sản phẩm bán nhiều chỉ trong tương lai không được chọn, ngày thiếu/trùng và xóa báo cáo thành công cũ khi chạy lại lỗi. Đối chiếu thêm các CSV thực tế bằng thư viện chuẩn: khóa duy nhất, tổng train của sản phẩm đã chọn, nhãn thực tế khớp lịch sử, horizon từ mốc cố định, baseline lặp tuần cuối và tính lại toàn bộ 84 dòng MAE/RMSE đều khớp. Bằng chứng tại `outputs/forecast_validation.json`; nhật ký tại `outputs/step3_run.log`, `outputs/step3_tests.log`.
-
-## Chạy bước 4 và chạy lại quy trình
-
-Cài và mở dashboard từ thư mục gốc dự án:
+## Mở dashboard
 
 ```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements-dashboard.txt
-.\.venv\Scripts\python.exe -m streamlit run code\14_dashboard.py --server.address 127.0.0.1 --browser.gatherUsageStats false
+.\.venv\Scripts\python.exe -m streamlit run code\14_dashboard.py
 ```
 
-Mở `http://127.0.0.1:8501`. Dashboard không cần Spark/Java khi xem kết quả có sẵn. Phiên bản đã chạy: Streamlit **1.50.0**, pandas **2.2.3**; các phiên bản xử lý/mô hình như bước 3.
+Dashboard đọc CSV/JSON nhỏ, không huấn luyện khi đổi bộ lọc. Chọn cửa hàng/nhóm/ngày để xem
+thống kê bán hàng; chọn sản phẩm và test/validation để xem dự báo, sai số và tổng dư/thiếu.
+Bộ lọc ngày chỉ áp dụng doanh thu và lịch sử; đánh giá luôn dùng đủ 28 ngày.
+Hiện chỉ CA_1 có dự báo; chạy `13_forecasting.py --store CA_2` để tạo lại cho cửa hàng khác.
+Chạy lại ghi đè kết quả dự báo cũ, nên không chạy khi đang dùng dashboard để trình bày.
+Dashboard cũng giải thích cách chọn mô hình và giới hạn đánh giá.
 
-- Chọn cửa hàng và nhóm sản phẩm để xem lượng bán, doanh thu phần biết giá, bao phủ giá theo dòng/lượng bán và hai biểu đồ theo ngày.
-- Chọn khoảng ngày để lọc doanh thu và lịch sử sản phẩm; tổng lượng bán, doanh thu và bao phủ giá được tính lại trong khoảng chọn. Biểu đồ thực tế/dự báo và MAE/RMSE vẫn dùng đủ 28 ngày của tập đánh giá.
-- Chọn sản phẩm trong panel dự báo và tập `test` hoặc `validation` để xem lịch sử, biểu đồ thực tế so với hai mô hình, MAE/RMSE từng sản phẩm và `ALL`, bảng 28 ngày và tải CSV.
-- Doanh thu thuộc toàn bộ sản phẩm của nhóm/cửa hàng; không phải doanh thu riêng sản phẩm đang dự báo. Mô hình dự báo lượng bán, không dự báo doanh thu. Chọn nhóm doanh thu không thay đổi panel dự báo.
-- Hiện chỉ CA_1 có dự báo. Chọn cửa hàng khác vẫn xem được doanh thu và hiện hướng dẫn tạo dự báo bằng `13_forecasting.py --store CA_2`. Chạy lại bước 3 mặc định thay bộ dự báo cũ bằng một cửa hàng mới.
-- Trường “Thư mục kết quả” cho phép chọn thư mục khác có hai thư mục con `analysis/` và `forecast/`; hoặc đặt biến môi trường `M5_OUTPUT_DIR`. Hai report phải có `status=success` và cùng nguồn đầu vào. Thiếu file/báo cáo lỗi được hiển thị cùng hướng dẫn chạy, không mở mô hình joblib hoặc Parquet trong giao diện.
-
-Dashboard đọc bốn CSV: `daily_category_store.csv`, `history.csv`, `predictions.csv`, `metrics.csv` và hai JSON báo cáo. Không đọc 58 triệu dòng, không huấn luyện lại khi đổi bộ lọc. Doanh thu thiếu hoàn toàn được giữ trống/“Chưa biết”; số 0 chỉ dùng khi dữ liệu thực sự có giá trị 0. Chỉ xem các kết quả đã chạy hoàn tất; không ghi đè CSV trong lúc người khác xem demo.
-
-Chạy lại bước 1–3 và tất cả kiểm tra, dừng nếu bước nào lỗi:
+## Kiểm tra và chạy toàn bộ
 
 ```powershell
-.\run_pipeline.ps1
-# Nếu đã cài phụ thuộc:
 .\run_pipeline.ps1 -SkipInstall
-# Chỉ chạy kiểm tra dashboard:
-.\.venv\Scripts\python.exe -m unittest discover -s tests -p test_dashboard.py -v
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-Script dùng `.venv` có sẵn, JDK từ `JAVA_HOME` hoặc `.runtime/jdk-17*`, lưu log vào `outputs/pipeline_*.log`; không tự mở server dashboard. Tạo `.venv`, đặt dữ liệu và chuẩn bị JDK theo bước 1–2 trước lần chạy đầu. Tắt server Streamlit bằng Ctrl+C trong terminal khởi chạy.
-
-### Kết quả bước 4 ngày 25/10/2026
-
-Đã chạy lại thành công toàn bộ pipeline local trên **58.327.370 dòng**: Spark tổng hợp **40,94 giây**, dự báo **44,67 giây** (thời gian trong từng script, không gồm khởi động/cài đặt). Kết quả test giữ nguyên: baseline MAE **8,0625**, RMSE **12,4043**; Random Forest MAE **7,0504**, RMSE **10,4685**. Đây là backtest một cửa sổ 28 ngày trên 20 sản phẩm CA_1.
-
-Toàn bộ **12/12 kiểm tra đạt**, gồm 3 kiểm tra dashboard mới: đổi cửa hàng/nhóm/sản phẩm/tập và tạo đủ 4 biểu đồ; thông báo khi thiếu kết quả; từ chối report chưa hoàn tất/khác nguồn và giữ doanh thu chưa biết. Bộ kiểm tra dùng Streamlit AppTest theo [tài liệu chính thức](https://docs.streamlit.io/develop/api-reference/app-testing/st.testing.v1.apptest).
-
-Kiểm tra thêm trên CSV thật: **57.390** dòng tổng hợp, **38.260** dòng lịch sử, **2.240** dòng dự báo và **84** dòng độ đo; tổng bốn CSV **6.110.662 byte (~6,11 MB)**. AppTest mở được dữ liệu thật, tạo 4 biểu đồ, bảng 28 ngày, độ đo validation/test khớp CSV; chuyển CA_2 hiện đúng thông báo chưa có dự báo. Đã mở và kiểm tra giao diện trình duyệt tại `http://127.0.0.1:8501`; health endpoint trả `ok`; `pip check` không báo phụ thuộc hỏng.
-
-Bằng chứng lần chạy này: `outputs/step4_pipeline.log`, `outputs/pipeline_tests.log`, `outputs/step4_dashboard_tests.log`, `outputs/step4_app_smoke.log`, `outputs/step4_validation.json`. HDFS chưa kiểm thử; chưa đánh giá nhiều cửa sổ thời gian hay dự báo sau ngày cuối dữ liệu. Không tạo Word/PPT trong bước này.
-
-### Bước 5 theo SPEC — dashboard ngày 25/10/2026
-
-Mục 5 của SPEC tương ứng phần demo đã gọi là bước 4 trong kế hoạch README ở trên. Dashboard nằm tại `code/14_dashboard.py`; dùng lệnh Streamlit trong phần hướng dẫn trên và mở `http://127.0.0.1:8501`.
-
-Đã bổ sung bộ lọc khoảng ngày cho doanh thu và lịch sử, xử lý chọn chưa đủ hai ngày hoặc sản phẩm không có lịch sử trong khoảng chọn. Số sản phẩm trong chú thích sai số lấy từ báo cáo thay vì cố định 20. Bộ lọc ngày không thay đổi cửa sổ dự báo hoặc MAE/RMSE.
-
-Chạy AppTest trên dữ liệu thật: đủ **4 biểu đồ**, bảng đối chiếu **28 ngày**, MAE/RMSE validation/test khớp CSV; kiểm tra chọn cả **10 cửa hàng**, trong đó **CA_1** có dự báo cho **20 sản phẩm**. Lọc tháng 03/2016 ở CA_1 cho **136.557** đơn vị bán, khớp tổng hợp độc lập. Bốn CSV giao diện đọc có **6.110.662 byte (~6,11 MB)**, không đọc lại Parquet. Health endpoint của server local trả `ok`.
-
-Toàn bộ **13/13 kiểm tra đạt** trong **27,74 giây**, gồm **4 kiểm tra dashboard**. Nhật ký: `outputs/step5_dashboard_tests.log`, `outputs/step5_tests.log`, `outputs/step5_app_smoke.log`; kết quả dữ liệu thật tại `outputs/step5_validation.json`. Lần này sử dụng kết quả tổng hợp/dự báo có sẵn, không chạy lại toàn bộ dữ liệu thô; HDFS chưa kiểm thử.
-
-## Bước 6 theo SPEC — lệnh chạy, môi trường, kiểm tra và nguồn dữ liệu
-
-Từ thư mục gốc, sau khi đặt dữ liệu và JDK 17 theo hướng dẫn bước 1–2:
-
-```powershell
-python -m venv .venv
-.\run_pipeline.ps1
-# Các lần sau dùng môi trường đã cài:
-.\run_pipeline.ps1 -SkipInstall
-# Mở demo sau khi pipeline thành công:
-.\.venv\Scripts\python.exe -m streamlit run code\14_dashboard.py --server.address 127.0.0.1 --browser.gatherUsageStats false
-```
-
-Dùng Python **3.11** để tạo `.venv`. Script cài chuỗi `requirements-dashboard.txt`
-→ `requirements-forecast.txt` → `requirements-spark.txt` → `requirements-preflight.txt`,
-chạy `pip check`, kiểm tra đầu vào, Spark, dự báo và toàn bộ unittest; mỗi lệnh
-thất bại sẽ dừng pipeline. `-SkipInstall` bỏ cài đặt nhưng vẫn kiểm tra phụ thuộc.
-Lệnh này dùng đầu vào local mặc định, không kiểm chứng HDFS. Không tự tải dữ liệu
-hay JDK; `JAVA_HOME` có sẵn được ưu tiên hơn JDK portable trong `.runtime`.
-
-| Thành phần | Phiên bản môi trường đã chạy |
-|---|---|
-| OS / Python | Windows / 3.11.9 (64 bit) |
-| Java / Spark | Temurin 17.0.20.1 / PySpark 3.5.3 |
-| PyArrow / NumPy | 23.0.1 / 2.1.3 |
-| scikit-learn | 1.5.2 |
-| pandas / Streamlit | 2.2.3 / 1.50.0 |
-
-Inventory ghi phiên bản thư viện **thực tế**, `JAVA_HOME`, Python, thời điểm UTC,
-tên/kích thước/SHA-256 của 32 file Parquet. Java đang chạy trong JVM và cấu hình
-Spark nằm trong hai report phân tích/dự báo. Các requirements ghim thư viện
-chính; chưa khóa toàn bộ phụ thuộc gián tiếp hoặc thử trên máy sạch.
-Thông tin nguồn và giới hạn tái lập được ghi tại [DATA_SOURCE.md](DATA_SOURCE.md).
-
-Kiểm tra đầu vào bao gồm đối chiếu SHA-256 độc lập bằng thư viện chuẩn, phát hiện
-file thay đổi và không để báo cáo `success` cũ tồn tại sau lần chạy lại lỗi.
-Các kiểm tra Spark/dự báo/dashboard tiếp tục dùng trong cùng lệnh pipeline.
-
-### Kết quả bước 6 ngày 25/10/2026
-
-Đã chạy `.\run_pipeline.ps1 -SkipInstall` thành công trên **32 file,
-58.327.370 dòng**; `pip check` trả `No broken requirements found`.
-Spark tổng hợp **37,62 giây**, dự báo **47,20 giây** (thời gian trong từng
-script); toàn bộ **14/14 kiểm tra đạt** trong **15,25 giây**. Inventory có đủ
-32 SHA-256 và phiên bản của cả 6 thư viện chính. RF test MAE **7,0504**,
-RMSE **10,4685**; baseline MAE **8,0625**, RMSE **12,4043**.
-
-Nhật ký toàn bộ lần chạy: `outputs/step6_pipeline.log`; kiểm tra phụ thuộc:
-`outputs/pipeline_dependencies.log`; kiểm tra logic: `outputs/pipeline_tests.log`.
-Inventory và hai report trong `outputs/analysis/`, `outputs/forecast/` được tạo
-lại từ dữ liệu thật. Dashboard được kiểm tra qua AppTest trong bộ kiểm tra;
-lần này không kiểm tra lại bằng trình duyệt. Chưa thử cài trên máy sạch,
-chưa chạy HDFS hoặc đối chiếu dữ liệu CSV gốc.
-
-### Kiểm tra trước khi push ngày 25/10/2026
-
-Đọc lại source các bước 11–14, bộ kiểm tra, chuỗi requirements và lệnh pipeline.
-Chạy lại `run_pipeline.ps1 -SkipInstall` thành công trên toàn bộ **58.327.370 dòng**;
-**14/14 kiểm tra đạt** trong **30,91 giây**. Tổng hợp Spark **38,75 giây**, dự báo
-**73,01 giây** theo report của lần chạy; MAE/RMSE test giữ nguyên bảng phía trên.
-Đối chiếu CSV dự báo có đủ **2.240 dòng**, mọi ngày dự báo sau mốc dự báo;
-CA_1 tháng 03/2016 có **136.557** đơn vị bán. Health endpoint dashboard trả `ok`.
-Log lần kiểm tra: `outputs/review_pipeline.log`. Có ResourceWarning về socket
-trong PySpark khi chạy unittest; quá trình kết thúc với `OK` và exit code 0.
-Chưa chạy lại bằng trình duyệt, trên máy sạch hoặc HDFS trong lượt kiểm tra này.
+Kiểm thử gồm đầu vào/Spark/dashboard, cửa sổ lịch sử, đặc trưng bán 0, cách chọn mô hình,
+đối chiếu sai số và kiểm tra thay nhãn test không làm đổi kết quả lựa chọn trên validation.
+Nhật ký lần cải tiến: outputs/improvement_tests.log và outputs/improvement_forecast.log.
+Đối chiếu CSV thật: outputs/forecast_validation.json.
+Các kết quả chỉ hoàn tất khi report tương ứng có status=success.
+HDFS và cụm nhiều máy chưa được kiểm chứng trong luồng hiện tại.

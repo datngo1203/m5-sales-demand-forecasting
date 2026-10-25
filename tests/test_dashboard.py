@@ -34,12 +34,13 @@ class DashboardTests(unittest.TestCase):
         predictions, metrics = [], []
         for split in ("test", "validation"):
             for item in ("item1", "item2"):
-                for model in ("seasonal_naive", "random_forest"):
+                for model in ("seasonal_naive", "random_forest", "selected_forecast"):
                     predictions.append({"date": "2020-01-02", "origin_date": "2020-01-01",
                                         "store_id": "A", "item_id": item, "split": split,
                                         "model": model, "prediction": 3, "actual": 2})
                     metrics.append({"store_id": "A", "item_id": item, "split": split,
-                                    "model": model, "observations": 1, "mae": 1, "rmse": 1})
+                                    "model": model, "observations": 1, "mae": 1, "rmse": 1,
+                                    "actual_units": 2, "predicted_units": 3, "bias_units": 1, "bias_pct": 50})
         pd.DataFrame(predictions).to_csv(folder / "forecast/predictions.csv", index=False)
         pd.DataFrame(metrics).to_csv(folder / "forecast/metrics.csv", index=False)
 
@@ -50,6 +51,8 @@ class DashboardTests(unittest.TestCase):
             self.assertFalse(app.exception)
             self.assertEqual(len(app.get("arrow_vega_lite_chart")), 4)
             self.assertEqual(app.metric[2].value, "Chưa biết")
+            self.assertIn("bias_pct", app.dataframe[0].value.columns)
+            self.assertIn("selected_forecast", app.dataframe[1].value.columns)
             app.sidebar.selectbox[2].select("item2")
             app.sidebar.selectbox[3].select("validation").run()
             self.assertFalse(app.exception)

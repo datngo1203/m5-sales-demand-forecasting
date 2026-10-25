@@ -26,12 +26,15 @@ và 5 dòng mẫu để kiểm tra cấu trúc, không nạp toàn bộ dữ li�
 Không thay dữ liệu trong lúc pipeline đang chạy.
 
 `code/12_spark_analysis.py` tổng hợp toàn bộ dữ liệu; `code/13_forecasting.py`
-chọn 20 sản phẩm của CA_1 bằng lượng bán train, chia train/validation/test theo
-ngày và xuất backtest 28 ngày. Dashboard dùng CSV nhỏ đã xuất. Doanh thu là
+chọn 20 sản phẩm của CA_1 bằng lượng bán trước mốc validation đầu tiên, giữ
+panel cố định qua bốn cửa sổ validation 28 ngày và một cửa sổ test 28 ngày.
+Thử lịch sử train toàn bộ, 365 và 180 ngày; chọn cấu hình RF và chọn giữa RF
+với baseline bằng validation. Dashboard dùng CSV nhỏ đã xuất. Doanh thu là
 lượng bán × giá, giữ riêng mức bao phủ giá; không tự điền giá thiếu.
 
 Để tái lập sau khi clone, nhận đúng bộ Parquet từ thành viên bàn giao và đặt
 vào đường dẫn trên, chuẩn bị Python/JDK theo README rồi chạy `run_pipeline.ps1`.
 Git không chứa dữ liệu, môi trường hay kết quả. Thư mục `forecasting_features`
 và HDFS được nhắc trong bàn giao không có sẵn để kiểm chứng; pipeline local
-không phụ thuộc chúng. Word/PPT và chạy HDFS nằm ngoài lần bổ sung source này.
+không phụ thuộc chúng. Chưa kiểm chứng HDFS. Tài liệu giải thích hiện có trong
+`docs/Giai_thich_chuc_nang_va_quy_trinh_M5.docx`; chưa làm PPT.

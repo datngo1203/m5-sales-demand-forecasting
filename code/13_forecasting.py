@@ -21,10 +21,12 @@ analysis = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(analysis)
 HORIZON = 28
 LOOKBACK = 28
+FOLDS = 4
 FEATURES = ([f"lag_{lag}" for lag in (1, 7, 14, 28)]
             + ["mean_7", "mean_28", "weekday", "month", "day_of_year", "trend_days"])
-CANDIDATES = [{"max_depth": 12, "min_samples_leaf": 5},
-              {"max_depth": None, "min_samples_leaf": 2}]
+RECENT_FEATURES = ["zero_fraction_7", "zero_fraction_28", "zero_streak_28", "mean_7_minus_28"]
+CANDIDATES = [{"window_days": window, "max_depth": depth, "min_samples_leaf": leaf}
+              for window in (None, 365, 180) for depth, leaf in ((12, 5), (None, 2))]
 
 
 def write_csv(path, rows):
@@ -45,13 +47,21 @@ def split_dates(first, last):
     return val_start, test_start
 
 
+def rolling_starts(days):
+    starts = list(range(days - HORIZON * (FOLDS + 1), days - HORIZON, HORIZON))
+    if starts[0] < LOOKBACK + HORIZON:
+        raise ValueError("Need at least 196 daily observations for four validation windows and direct training")
+    return starts
+
+
 def load_panel(spark, source, store):
     df = analysis.prepare(spark.read.parquet(*analysis.parquet_paths(analysis.input_uri(source))))
     quality = analysis.validate(df)
     first, last = quality["date_min"], quality["date_max"]
     val_start, test_start = split_dates(first, last)
+    selection_end = first + timedelta(days=rolling_starts((last - first).days + 1)[0])
     store_df = df.filter(F.col("store_id") == store)
-    ranked = (store_df.filter(F.col("date") < F.lit(val_start)).groupBy("item_id")
+    ranked = (store_df.filter(F.col("date") < F.lit(selection_end)).groupBy("item_id")
               .agg(F.sum("demand").alias("train_units"))
               .orderBy(F.desc("train_units"), F.asc("item_id")).limit(20).collect())
     if len(ranked) != 20:
@@ -71,32 +81,38 @@ def load_panel(spark, source, store):
     return dates, values, selected, quality, val_start, test_start
 
 
-def features(history, day, first, series_index, count):
+def features(history, day, first, series_index, count, recent=True):
     if len(history) < LOOKBACK:
         raise ValueError("Features require 28 known previous observations")
-    return ([history[-lag] for lag in (1, 7, 14, 28)]
+    result = ([history[-lag] for lag in (1, 7, 14, 28)]
             + [float(np.mean(history[-7:])), float(np.mean(history[-28:])),
-               day.weekday(), day.month, day.timetuple().tm_yday, (day - first).days]
-            + [float(i == series_index) for i in range(count)])
+               day.weekday(), day.month, day.timetuple().tm_yday, (day - first).days])
+    if recent:
+        last = np.asarray(history[-LOOKBACK:])
+        nonzero = np.flatnonzero(last > 0)
+        result += [float(np.mean(last[-7:] == 0)), float(np.mean(last == 0)),
+                   float(LOOKBACK - 1 - nonzero[-1]) if len(nonzero) else float(LOOKBACK),
+                   float(np.mean(last[-7:]) - np.mean(last))]
+    return result + [float(i == series_index) for i in range(count)]
 
 
-def training_data(values, dates, end):
+def training_data(values, dates, end, window_days=None, recent=True, horizon=1):
     x, y = [], []
     for series in range(len(values)):
-        for t in range(LOOKBACK, end):
-            x.append(features(values[series, :t], dates[t], dates[0], series, len(values)))
-            y.append(values[series, t])
+        for t in range(max(LOOKBACK, end - window_days) if window_days else LOOKBACK, end - horizon + 1):
+            x.append(features(values[series, :t], dates[t], dates[0], series, len(values), recent))
+            y.append(values[series, t] if horizon == 1 else values[series, t:t + horizon])
     return np.asarray(x), np.asarray(y)
 
 
-def recursive_predict(model, known, dates, first):
+def recursive_predict(model, known, dates, first, recent=True):
     histories = [list(row) for row in known]
     result = []
     for day in dates:
         if model is None:
             predicted = np.array([history[-7] for history in histories])
         else:
-            x = [features(history, day, first, i, len(histories))
+            x = [features(history, day, first, i, len(histories), recent)
                  for i, history in enumerate(histories)]
             predicted = np.maximum(0, model.predict(x))
         result.append(predicted)
@@ -107,36 +123,105 @@ def recursive_predict(model, known, dates, first):
 
 def scores(actual, predicted):
     error = np.asarray(actual) - np.asarray(predicted)
-    return {"mae": float(np.mean(np.abs(error))), "rmse": float(np.sqrt(np.mean(error ** 2)))}
+    total = float(np.sum(actual))
+    bias = float(np.sum(predicted) - total)
+    return {"mae": float(np.mean(np.abs(error))), "rmse": float(np.sqrt(np.mean(error ** 2))),
+            "actual_units": total, "predicted_units": float(np.sum(predicted)),
+            "bias_units": bias, "bias_pct": 100 * bias / total if total else None}
+
+
+def direct_predict(model, known, dates, first):
+    x = [features(history, dates[0], first, i, len(known)) for i, history in enumerate(known)]
+    return np.maximum(0, model.predict(x))
 
 
 def fit_model(x, y, params):
     return RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=2,
-                                 **params).fit(x, y)
+                                 **{k: v for k, v in params.items() if k not in ("window_days", "strategy")}).fit(x, y)
+
+
+def select_forecasters(actual, baseline, forest):
+    # Fold axes stay separate until selection; test observations never enter here.
+    return ["random_forest" if scores(a, rf)["mae"] < scores(a, sn)["mae"] else "seasonal_naive"
+            for a, sn, rf in zip(actual.transpose(1, 0, 2), baseline.transpose(1, 0, 2),
+                                 forest.transpose(1, 0, 2))]
 
 
 def evaluate_panel(dates, values, selected, output):
     val_start, test_start = split_dates(dates[0], dates[-1])
     val_index, test_index = dates.index(val_start), dates.index(test_start)
-    x, y = training_data(values, dates, val_index)
-    trials = []
-    best = None
-    for params in CANDIDATES:
-        model = fit_model(x, y, params)
-        predicted = recursive_predict(model, values[:, :val_index], dates[val_index:test_index], dates[0])
-        score = scores(values[:, val_index:test_index], predicted)
-        trials.append({"params": params, **score})
-        if best is None or score["mae"] < best[0]:
-            best = (score["mae"], params, predicted)
-    x, y = training_data(values, dates, test_index)
-    model = fit_model(x, y, best[1])
+    starts = rolling_starts(len(dates))
+    actual_folds = np.array([values[:, start:start + HORIZON] for start in starts])
+    baseline_folds = np.array([recursive_predict(None, values[:, :start],
+                               dates[start:start + HORIZON], dates[0]) for start in starts])
+    trials, fold_metrics, candidate_predictions = [], [], []
+    # Reuse the training matrix for the two depth settings in each history window.
+    for window in (None, 365, 180):
+        matrices = [training_data(values, dates, start, window) for start in starts]
+        for params in (p for p in CANDIDATES if p["window_days"] == window):
+            candidate_id = f"rf_{window or 'all'}_depth_{params['max_depth'] or 'none'}"
+            forecasts = []
+            for fold, (start, (x, y)) in enumerate(zip(starts, matrices), 1):
+                model = fit_model(x, y, params)
+                predicted = recursive_predict(model, values[:, :start], dates[start:start + HORIZON], dates[0])
+                forecasts.append(predicted)
+                for i, item in enumerate(selected):
+                    fold_metrics.append({"fold": fold, "candidate": candidate_id,
+                                         "origin_date": dates[start - 1], "item_id": item["item_id"],
+                                         "store_id": item["store_id"], **scores(values[i, start:start + HORIZON], predicted[i])})
+            forecasts = np.array(forecasts)
+            candidate_predictions.append(forecasts)
+            trials.append({"candidate": candidate_id, "params": params, **scores(actual_folds, forecasts)})
+            print(json.dumps({"candidate": candidate_id, "validation_mae": trials[-1]["mae"]}), flush=True)
+    # Reuse the best recursive configuration for one native multi-output RF trial.
+    direct_params = {**min(trials, key=lambda row: (row["mae"], row["rmse"]))["params"], "strategy": "direct"}
+    forecasts = []
+    for fold, start in enumerate(starts, 1):
+        x, y = training_data(values, dates, start, direct_params["window_days"], horizon=HORIZON)
+        direct = fit_model(x, y, direct_params)
+        predicted = direct_predict(direct, values[:, :start], dates[start:start + HORIZON], dates[0])
+        forecasts.append(predicted)
+        for i, item in enumerate(selected):
+            fold_metrics.append({"fold": fold, "candidate": "rf_direct", "origin_date": dates[start - 1],
+                                 "item_id": item["item_id"], "store_id": item["store_id"],
+                                 **scores(values[i, start:start + HORIZON], predicted[i])})
+    forecasts = np.array(forecasts)
+    candidate_predictions.append(forecasts)
+    trials.append({"candidate": "rf_direct", "params": direct_params, **scores(actual_folds, forecasts)})
+    print(json.dumps({"candidate": "rf_direct", "validation_mae": trials[-1]["mae"]}), flush=True)
+    best_index = min(range(len(trials)), key=lambda i: (trials[i]["mae"], trials[i]["rmse"]))
+    best_params = trials[best_index]["params"]
+    forest_folds = candidate_predictions[best_index]
+    chosen = select_forecasters(actual_folds, baseline_folds, forest_folds)
+    write_csv(output / "model_selection.csv", [
+        {"item_id": item["item_id"], "store_id": item["store_id"], "model": choice,
+         "baseline_mae": scores(actual_folds[:, i], baseline_folds[:, i])["mae"],
+         "rf_mae": scores(actual_folds[:, i], forest_folds[:, i])["mae"]}
+        for i, (item, choice) in enumerate(zip(selected, chosen))])
+    for fold, start in enumerate(starts, 1):
+        for i, item in enumerate(selected):
+            fold_metrics.append({"fold": fold, "candidate": "seasonal_naive", "origin_date": dates[start - 1],
+                                 "item_id": item["item_id"], "store_id": item["store_id"],
+                                 **scores(actual_folds[fold - 1, i], baseline_folds[fold - 1, i])})
+    write_csv(output / "rolling_metrics.csv", fold_metrics)
+    is_direct = best_params.get("strategy") == "direct"
+    x, y = training_data(values, dates, test_index, best_params["window_days"], horizon=HORIZON if is_direct else 1)
+    model = fit_model(x, y, best_params)
+    # Recompute the original RF on this exact panel for a comparable before/after.
+    reference_x, reference_y = training_data(values, dates, test_index, recent=False)
+    reference = fit_model(reference_x, reference_y, {"max_depth": 12, "min_samples_leaf": 5})
+    reference_test = recursive_predict(reference, values[:, :test_index], dates[test_index:], dates[0], recent=False)
     predictions, metrics = [], []
     for split, start, end in (("validation", val_index, test_index), ("test", test_index, len(dates))):
         actual = values[:, start:end]
         baseline = recursive_predict(None, values[:, :start], dates[start:end], dates[0])
-        forest = (best[2] if split == "validation" else
-                  recursive_predict(model, values[:, :start], dates[start:end], dates[0]))
-        for name, predicted in (("seasonal_naive", baseline), ("random_forest", forest)):
+        forest = (forest_folds[-1] if split == "validation" else
+                  (direct_predict if is_direct else recursive_predict)(
+                      model, values[:, :start], dates[start:end], dates[0]))
+        combined = np.array([rf if choice == "random_forest" else sn
+                             for choice, rf, sn in zip(chosen, forest, baseline)])
+        for name, predicted in (("seasonal_naive", baseline), ("random_forest", forest),
+                                ("selected_forecast", combined)):
             metrics.append({"split": split, "model": name, "item_id": "ALL", "store_id": selected[0]["store_id"],
                             "observations": actual.size, **scores(actual, predicted)})
             for i, item in enumerate(selected):
@@ -151,11 +236,19 @@ def evaluate_panel(dates, values, selected, output):
     write_csv(output / "predictions.csv", predictions)
     write_csv(output / "metrics.csv", metrics)
     joblib.dump(model, output / "random_forest.joblib")
-    return {"validation_candidates": trials, "selected_params": best[1],
-            "train": {"start": dates[0], "end": dates[val_index - 1]},
-            "validation": {"start": val_start, "end": dates[test_index - 1]},
+    initial_start = max(LOOKBACK, starts[0] - best_params["window_days"]) if best_params["window_days"] else LOOKBACK
+    return {"validation_candidates": trials, "selected_params": best_params,
+            "train": {"start": dates[0], "end": dates[starts[0] - 1]},
+            "selection_cutoff": dates[starts[0] - 1],
+            "validation": {"start": dates[starts[0]], "end": dates[test_index - 1], "windows": FOLDS},
+            "validation_display": {"start": val_start, "end": dates[test_index - 1]},
             "test": {"start": test_start, "end": dates[-1]},
-            "train_examples": len(selected) * (val_index - LOOKBACK),
+            "train_examples": len(selected) * (starts[0] - initial_start - (HORIZON - 1 if is_direct else 0)),
+            "reference_test": scores(values[:, test_index:], reference_test),
+            "selected_models": {item["item_id"]: choice for item, choice in zip(selected, chosen)},
+            "rolling_baseline": scores(actual_folds, baseline_folds),
+            "validation_note": "Development results used for selection; displayed validation is the last window, not an independent holdout",
+            "test_note": "Previously inspected historical test; improvements are retrospective, not a fresh unseen test",
             "refit_examples": len(y), "metrics": [row for row in metrics if row["item_id"] == "ALL"],
             "output_rows": {"predictions": len(predictions), "metrics": len(metrics)}}
 
@@ -175,12 +268,17 @@ def run(spark, source, output, store="CA_1"):
     report = {"status": "success", "created_at_utc": datetime.now(timezone.utc).isoformat(),
               "input": analysis.input_uri(source), "input_quality": quality,
               "store_id": store, "series_count": len(selected), "days": len(dates),
-              "selection": "Top 20 by total training units in the requested store; item_id breaks ties",
-              "features": FEATURES + [f"item_{row['item_id']}" for row in selected],
+              "selection": "Top 20 by units strictly before the earliest validation origin; item_id breaks ties",
+              "features": FEATURES + RECENT_FEATURES + [f"item_{row['item_id']}" for row in selected],
               "forest": {"n_estimators": 100, "random_state": 42, "n_jobs": 2},
-              "protocol": ["Last 28 days test, preceding 28 validation; earlier days training",
-                           "Select RF parameters by validation MAE; refit on train+validation before test",
-                           "Each 28-day window has one fixed origin; recursive predictions replace unknown demand",
+              "protocol": ["Last 28 days test; four earlier nonoverlapping 28-day validation windows",
+                           "Freeze the panel before the earliest validation window",
+                           "Select RF window/depth by pooled rolling validation MAE, then RMSE to break ties",
+                           "Also compare one direct 28-output RF with the best recursive window/depth",
+                           "Choose RF or baseline per item using pooled validation MAE; ties use baseline",
+                           "Refit selected RF configuration on data before test; selection never uses test targets",
+                           "Each 28-day window has one fixed origin; direct RF predicts all 28 days at once",
+                           "Recursive candidates replace unknown demand with predictions; direct targets end before each origin",
                            "Seasonal naive repeats the last known week recursively",
                            "No actual future demand, prices, or source forecasting features enter predictors",
                            "Metrics are per daily item/store observation; ALL pools equal-length series",

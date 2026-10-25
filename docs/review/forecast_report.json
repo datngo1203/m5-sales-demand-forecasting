@@ -1,0 +1,331 @@
+{
+  "status": "success",
+  "created_at_utc": "2026-10-25T16:35:03.991057+00:00",
+  "input": "file:///D:/Projects/BigData/GuiDat/data/processed_m5",
+  "input_quality": {
+    "rows": 58327370,
+    "invalid_rows": 0,
+    "unpriced_rows": 12299413,
+    "date_min": "2011-01-29",
+    "date_max": "2016-04-24"
+  },
+  "store_id": "CA_1",
+  "series_count": 20,
+  "days": 1913,
+  "selection": "Top 20 by units strictly before the earliest validation origin; item_id breaks ties",
+  "features": [
+    "lag_1",
+    "lag_7",
+    "lag_14",
+    "lag_28",
+    "mean_7",
+    "mean_28",
+    "weekday",
+    "month",
+    "day_of_year",
+    "trend_days",
+    "zero_fraction_7",
+    "zero_fraction_28",
+    "zero_streak_28",
+    "mean_7_minus_28",
+    "item_FOODS_3_090",
+    "item_FOODS_3_586",
+    "item_FOODS_3_252",
+    "item_FOODS_3_120",
+    "item_FOODS_3_714",
+    "item_FOODS_3_587",
+    "item_FOODS_3_808",
+    "item_FOODS_2_197",
+    "item_FOODS_3_080",
+    "item_FOODS_3_541",
+    "item_FOODS_3_555",
+    "item_FOODS_3_635",
+    "item_FOODS_3_741",
+    "item_FOODS_2_019",
+    "item_FOODS_3_318",
+    "item_FOODS_3_099",
+    "item_FOODS_3_681",
+    "item_FOODS_3_202",
+    "item_FOODS_3_319",
+    "item_FOODS_3_694"
+  ],
+  "forest": {
+    "n_estimators": 100,
+    "random_state": 42,
+    "n_jobs": 2
+  },
+  "protocol": [
+    "Last 28 days test; four earlier nonoverlapping 28-day validation windows",
+    "Freeze the panel before the earliest validation window",
+    "Select RF window/depth by pooled rolling validation MAE, then RMSE to break ties",
+    "Also compare one direct 28-output RF with the best recursive window/depth",
+    "Choose RF or baseline per item using pooled validation MAE; ties use baseline",
+    "Refit selected RF configuration on data before test; selection never uses test targets",
+    "Each 28-day window has one fixed origin; direct RF predicts all 28 days at once",
+    "Recursive candidates replace unknown demand with predictions; direct targets end before each origin",
+    "Seasonal naive repeats the last known week recursively",
+    "No actual future demand, prices, or source forecasting features enter predictors",
+    "Metrics are per daily item/store observation; ALL pools equal-length series",
+    "Forecasts estimate observed sales, not latent demand during stockouts",
+    "Duplicate/missing dates rejected for selected series; HDFS requires a separate service test"
+  ],
+  "validation_candidates": [
+    {
+      "candidate": "rf_all_depth_12",
+      "params": {
+        "window_days": null,
+        "max_depth": 12,
+        "min_samples_leaf": 5
+      },
+      "mae": 8.184154453280918,
+      "rmse": 12.06603219313397,
+      "actual_units": 38027.0,
+      "predicted_units": 43132.119155677225,
+      "bias_units": 5105.119155677225,
+      "bias_pct": 13.42498528855083
+    },
+    {
+      "candidate": "rf_all_depth_none",
+      "params": {
+        "window_days": null,
+        "max_depth": null,
+        "min_samples_leaf": 2
+      },
+      "mae": 9.105305220412028,
+      "rmse": 15.03366438543839,
+      "actual_units": 38027.0,
+      "predicted_units": 46880.535690115445,
+      "bias_units": 8853.535690115445,
+      "bias_pct": 23.282235490876072
+    },
+    {
+      "candidate": "rf_365_depth_12",
+      "params": {
+        "window_days": 365,
+        "max_depth": 12,
+        "min_samples_leaf": 5
+      },
+      "mae": 8.13857610545502,
+      "rmse": 11.804838564416336,
+      "actual_units": 38027.0,
+      "predicted_units": 42328.662997215404,
+      "bias_units": 4301.662997215404,
+      "bias_pct": 11.312128217359781
+    },
+    {
+      "candidate": "rf_365_depth_none",
+      "params": {
+        "window_days": 365,
+        "max_depth": null,
+        "min_samples_leaf": 2
+      },
+      "mae": 8.490741375068383,
+      "rmse": 12.75078555441753,
+      "actual_units": 38027.0,
+      "predicted_units": 43432.649510156516,
+      "bias_units": 5405.649510156516,
+      "bias_pct": 14.215293107940452
+    },
+    {
+      "candidate": "rf_180_depth_12",
+      "params": {
+        "window_days": 180,
+        "max_depth": 12,
+        "min_samples_leaf": 5
+      },
+      "mae": 7.635465576821241,
+      "rmse": 11.492684669043749,
+      "actual_units": 38027.0,
+      "predicted_units": 40580.230918983856,
+      "bias_units": 2553.230918983856,
+      "bias_pct": 6.714258077113251
+    },
+    {
+      "candidate": "rf_180_depth_none",
+      "params": {
+        "window_days": 180,
+        "max_depth": null,
+        "min_samples_leaf": 2
+      },
+      "mae": 7.830297913408517,
+      "rmse": 11.82299926167328,
+      "actual_units": 38027.0,
+      "predicted_units": 41171.966413114664,
+      "bias_units": 3144.9664131146637,
+      "bias_pct": 8.270351100835363
+    },
+    {
+      "candidate": "rf_direct",
+      "params": {
+        "window_days": 180,
+        "max_depth": 12,
+        "min_samples_leaf": 5,
+        "strategy": "direct"
+      },
+      "mae": 7.8341629098749195,
+      "rmse": 12.609526102321047,
+      "actual_units": 38027.0,
+      "predicted_units": 37244.91445228611,
+      "bias_units": -782.0855477138903,
+      "bias_pct": -2.0566585523809144
+    }
+  ],
+  "selected_params": {
+    "window_days": 180,
+    "max_depth": 12,
+    "min_samples_leaf": 5
+  },
+  "train": {
+    "start": "2011-01-29",
+    "end": "2015-12-06"
+  },
+  "selection_cutoff": "2015-12-06",
+  "validation": {
+    "start": "2015-12-07",
+    "end": "2016-03-27",
+    "windows": 4
+  },
+  "validation_display": {
+    "start": "2016-02-29",
+    "end": "2016-03-27"
+  },
+  "test": {
+    "start": "2016-03-28",
+    "end": "2016-04-24"
+  },
+  "train_examples": 3600,
+  "reference_test": {
+    "mae": 7.5294313749562045,
+    "rmse": 10.688370271342002,
+    "actual_units": 10436.0,
+    "predicted_units": 12533.43570293321,
+    "bias_units": 2097.4357029332095,
+    "bias_pct": 20.09808071036038
+  },
+  "selected_models": {
+    "FOODS_3_090": "random_forest",
+    "FOODS_3_586": "random_forest",
+    "FOODS_3_252": "random_forest",
+    "FOODS_3_120": "random_forest",
+    "FOODS_3_714": "random_forest",
+    "FOODS_3_587": "random_forest",
+    "FOODS_3_808": "seasonal_naive",
+    "FOODS_2_197": "random_forest",
+    "FOODS_3_080": "random_forest",
+    "FOODS_3_541": "seasonal_naive",
+    "FOODS_3_555": "random_forest",
+    "FOODS_3_635": "seasonal_naive",
+    "FOODS_3_741": "random_forest",
+    "FOODS_2_019": "random_forest",
+    "FOODS_3_318": "seasonal_naive",
+    "FOODS_3_099": "random_forest",
+    "FOODS_3_681": "random_forest",
+    "FOODS_3_202": "random_forest",
+    "FOODS_3_319": "seasonal_naive",
+    "FOODS_3_694": "random_forest"
+  },
+  "rolling_baseline": {
+    "mae": 8.342410714285714,
+    "rmse": 14.083789440345948,
+    "actual_units": 38027.0,
+    "predicted_units": 36880.0,
+    "bias_units": -1147.0,
+    "bias_pct": -3.016277907802351
+  },
+  "validation_note": "Development results used for selection; displayed validation is the last window, not an independent holdout",
+  "test_note": "Previously inspected historical test; improvements are retrospective, not a fresh unseen test",
+  "refit_examples": 3600,
+  "metrics": [
+    {
+      "split": "validation",
+      "model": "seasonal_naive",
+      "item_id": "ALL",
+      "store_id": "CA_1",
+      "observations": 560,
+      "mae": 8.273214285714285,
+      "rmse": 15.167104912559003,
+      "actual_units": 10005.0,
+      "predicted_units": 10068.0,
+      "bias_units": 63.0,
+      "bias_pct": 0.6296851574212894
+    },
+    {
+      "split": "validation",
+      "model": "random_forest",
+      "item_id": "ALL",
+      "store_id": "CA_1",
+      "observations": 560,
+      "mae": 6.711790336548503,
+      "rmse": 10.45248898515546,
+      "actual_units": 10005.0,
+      "predicted_units": 10771.669233333785,
+      "bias_units": 766.6692333337851,
+      "bias_pct": 7.662860902886408
+    },
+    {
+      "split": "validation",
+      "model": "selected_forecast",
+      "item_id": "ALL",
+      "store_id": "CA_1",
+      "observations": 560,
+      "mae": 6.588403449904419,
+      "rmse": 10.47961741157192,
+      "actual_units": 10005.0,
+      "predicted_units": 10624.726082915142,
+      "bias_units": 619.7260829151419,
+      "bias_pct": 6.19416374727778
+    },
+    {
+      "split": "test",
+      "model": "seasonal_naive",
+      "item_id": "ALL",
+      "store_id": "CA_1",
+      "observations": 560,
+      "mae": 8.360714285714286,
+      "rmse": 12.61121949467446,
+      "actual_units": 10436.0,
+      "predicted_units": 11804.0,
+      "bias_units": 1368.0,
+      "bias_pct": 13.10847067842085
+    },
+    {
+      "split": "test",
+      "model": "random_forest",
+      "item_id": "ALL",
+      "store_id": "CA_1",
+      "observations": 560,
+      "mae": 7.467641306934309,
+      "rmse": 11.160648379059518,
+      "actual_units": 10436.0,
+      "predicted_units": 12429.047702985828,
+      "bias_units": 1993.0477029858284,
+      "bias_pct": 19.09781240883316
+    },
+    {
+      "split": "test",
+      "model": "selected_forecast",
+      "item_id": "ALL",
+      "store_id": "CA_1",
+      "observations": 560,
+      "mae": 7.20924799544724,
+      "rmse": 11.12714050510649,
+      "actual_units": 10436.0,
+      "predicted_units": 12235.469477272049,
+      "bias_units": 1799.4694772720486,
+      "bias_pct": 17.2429041517061
+    }
+  ],
+  "output_rows": {
+    "predictions": 3360,
+    "metrics": 126
+  },
+  "seconds": 298.25,
+  "environment": {
+    "python": "3.11.9",
+    "spark": "3.5.3",
+    "numpy": "2.1.3",
+    "scikit_learn": "1.5.2",
+    "java": "17.0.20.1",
+    "master": "local[2]"
+  }
+}

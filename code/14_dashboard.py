@@ -87,17 +87,28 @@ def main():
                                        (predictions.item_id == item) & (predictions.split == split)]
     selected_metrics = metrics[(metrics.store_id == store) & (metrics.split == split) &
                                metrics.item_id.isin([item, "ALL"])]
+    strategy = "trực tiếp" if reports[1].get("selected_params", {}).get("strategy") == "direct" else "đệ quy"
     st.caption(f"{item} · {split} · Mốc dự báo: {selected_predictions.origin_date.min():%d/%m/%Y} · "
-               "28 ngày dự báo đệ quy, không cập nhật lượng bán thật trong cửa sổ.")
+               f"28 ngày dự báo {strategy}, không cập nhật lượng bán thật trong cửa sổ.")
     if selected_history.empty:
         st.info("Sản phẩm không có lịch sử trong khoảng ngày đã chọn.")
     st.line_chart(selected_history, x="date", y="units", x_label="Ngày", y_label="Lịch sử lượng bán")
     comparison = selected_predictions.pivot(index="date", columns="model", values="prediction")
     comparison["actual"] = selected_predictions.groupby("date").actual.first()
     st.line_chart(comparison, x_label="Ngày", y_label="Lượng bán thực tế / dự báo")
-    st.caption("seasonal_naive: lặp tuần trước · random_forest: hồi quy · actual: thực tế")
-    st.dataframe(selected_metrics[["item_id", "model", "observations", "mae", "rmse"]],
+    st.caption("seasonal_naive: lặp tuần trước · random_forest: hồi quy · "
+               "selected_forecast: cách được chọn cho sản phẩm · actual: thực tế")
+    choice = reports[1].get("selected_models", {}).get(item)
+    if choice:
+        st.caption(f"{item} dùng {'Random Forest' if choice == 'random_forest' else 'lặp tuần trước'}, "
+                   "chọn bằng sai số trên bốn đợt validation trước test.")
+    columns = ["item_id", "model", "observations", "mae", "rmse"]
+    columns += [name for name in ("actual_units", "predicted_units", "bias_units", "bias_pct")
+                if name in selected_metrics.columns]
+    st.dataframe(selected_metrics[columns],
                  hide_index=True, width="stretch")
+    st.caption("bias_units là tổng dự báo trừ thực tế: dương là dự báo dư, âm là dự báo thiếu. "
+               "bias_pct để trống khi tổng thực tế bằng 0.")
     st.caption(f"ALL là sai số gộp {reports[1]['series_count']} sản phẩm được chọn bằng dữ liệu train; "
                "không phải sai số tổng cửa hàng. Biểu đồ dự báo và bảng sai số dùng đủ 28 ngày "
                "của tập đánh giá, độc lập với bộ lọc ngày doanh thu và lịch sử.")
@@ -106,7 +117,11 @@ def main():
                        file_name=f"{store}_{item}_{split}.csv", mime="text/csv")
     with st.expander("Cách đánh giá và giới hạn"):
         st.json({key: reports[1][key] for key in ("train", "validation", "test", "selected_params")})
-        st.write("Chọn tham số bằng MAE validation, huấn luyện lại với train + validation rồi đánh giá test. "
+        st.write("So sánh lịch sử huấn luyện toàn bộ, 365 hoặc 180 ngày qua bốn đợt validation. "
+                 "Thử thêm RF dự báo trực tiếp đủ 28 ngày để tránh truyền dự báo vào đầu vào ngày sau. "
+                 "Chọn cấu hình RF chung, rồi chọn baseline hoặc RF cho từng sản phẩm bằng MAE validation. "
+                 "Validation hiển thị là đợt cuối, đã tham gia lựa chọn nên không phải kiểm tra độc lập. "
+                 "Tập test cũ đã được xem khi phân tích lỗi; kết quả cải thiện là đối chiếu hồi cứu. "
                  "Đây là backtest có thực tế, chưa phải dự báo sau ngày cuối dữ liệu. "
                  "Chỉ dự báo lượng bán quan sát được, không ước lượng nhu cầu bị mất khi hết hàng. "
                  "Doanh thu ở trên thuộc toàn bộ sản phẩm trong nhóm/cửa hàng; dự báo chỉ thuộc panel đã chọn. "

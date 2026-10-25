@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 import pyarrow as pa
@@ -46,8 +47,44 @@ class ForecastLogicTests(unittest.TestCase):
         np.testing.assert_array_equal(result[0], np.arange(28, 56))
         baseline = module.recursive_predict(None, known, dates, date(2020, 1, 4))
         np.testing.assert_array_equal(baseline[0], np.tile(np.arange(21, 28), 4))
-        self.assertEqual(module.scores([0, 2], [0, 0]), {"mae": 1., "rmse": 2 ** .5})
+        score = module.scores([0, 2], [0, 0])
+        self.assertEqual(score["mae"], 1.)
+        self.assertEqual(score["rmse"], 2 ** .5)
+        self.assertEqual(score["bias_units"], -2.)
+        self.assertEqual(score["bias_pct"], -100.)
+        self.assertIsNone(module.scores([0], [2])["bias_pct"])
         np.testing.assert_array_equal(known[0], np.arange(28))
+
+    def test_recent_features_windows_and_selection_do_not_use_test(self):
+        dates = [date(2020, 1, 1) + timedelta(days=i) for i in range(210)]
+        values = np.array([np.arange(210) % 7, np.zeros(210)], dtype=float)
+        x, y = module.training_data(values, dates, 70, window_days=10)
+        self.assertEqual(len(y), 20)
+        self.assertEqual(y[0], values[0, 60])
+        direct_x, direct_y = module.training_data(values, dates, 70, window_days=40, horizon=28)
+        self.assertEqual(direct_y.shape, (26, 28))
+        np.testing.assert_array_equal(direct_y[0], values[0, 30:58])
+        self.assertLessEqual(float(direct_y.max()), float(values[:, :70].max()))
+        zeros = module.features(np.zeros(28), dates[28], dates[0], 0, 2)
+        self.assertEqual(zeros[10:14], [1., 1., 28., 0.])
+        self.assertEqual(module.rolling_starts(210), [70, 98, 126, 154])
+        with self.assertRaises(ValueError):
+            module.rolling_starts(195)
+        self.assertEqual(module.rolling_starts(196)[0], 56)
+        selected = [{"item_id": "a", "store_id": "S"}, {"item_id": "b", "store_id": "S"}]
+        def small_fit(x, y, params):
+            return module.RandomForestRegressor(n_estimators=3, random_state=42,
+                       max_depth=3).fit(x, y)
+
+        with tempfile.TemporaryDirectory() as folder, patch.object(module, "fit_model", side_effect=small_fit):
+            first = module.evaluate_panel(dates, values, selected, Path(folder))
+            changed = values.copy()
+            changed[:, -28:] = 1e6
+            second = module.evaluate_panel(dates, changed, selected, Path(folder))
+        self.assertEqual(first["validation_candidates"], second["validation_candidates"])
+        self.assertEqual(first["selected_models"], second["selected_models"])
+        self.assertEqual(first["selected_params"], second["selected_params"])
+        self.assertEqual(first["selected_models"]["b"], "seasonal_naive")
 
 
 class ForecastSparkTests(unittest.TestCase):
@@ -63,11 +100,11 @@ class ForecastSparkTests(unittest.TestCase):
     def fixture(self, folder, duplicate=False, missing=False):
         rows = []
         for i in range(21):
-            for t in range(110):
+            for t in range(210):
                 if missing and i == 1 and t == 50:
                     continue
                 # Item 00 wins only in the future and must not be selected.
-                units = (10000 if t >= 54 else 0) if i == 0 else i
+                units = (10000 if t >= 70 else 0) if i == 0 else i
                 rows.append({"date": date(2020, 1, 1) + timedelta(days=t),
                              "item_id": f"item{i:02}", "cat_id": "FOODS", "store_id": "S",
                              "demand": units, "sell_price": 1.})
@@ -88,9 +125,13 @@ class ForecastSparkTests(unittest.TestCase):
             self.assertEqual(selected[0]["item_id"], "item20")
             self.assertNotIn("item00", [row["item_id"] for row in selected])
             predictions = list(csv.DictReader(io.StringIO((output / "predictions.csv").read_text())))
-            self.assertEqual(len(predictions), 2240)
+            self.assertEqual(len(predictions), 3360)
+            self.assertEqual(report["validation"]["windows"], 4)
+            self.assertEqual(len(report["validation_candidates"]), 7)
+            self.assertTrue((output / "rolling_metrics.csv").is_file())
+            self.assertTrue((output / "model_selection.csv").is_file())
             for split in ("validation", "test"):
-                for model in ("seasonal_naive", "random_forest"):
+                for model in ("seasonal_naive", "random_forest", "selected_forecast"):
                     subset = [r for r in predictions if r["split"] == split and r["model"] == model]
                     self.assertEqual(len(subset), 560)
                     self.assertEqual(len({r["origin_date"] for r in subset}), 1)
@@ -100,6 +141,13 @@ class ForecastSparkTests(unittest.TestCase):
                                              [float(r["prediction"]) for r in subset])
                     self.assertAlmostEqual(metric["mae"], computed["mae"])
                     self.assertAlmostEqual(metric["rmse"], computed["rmse"])
+                    self.assertAlmostEqual(metric["bias_units"], computed["bias_units"])
+            for row in predictions:
+                if row["model"] == "selected_forecast":
+                    chosen = report["selected_models"][row["item_id"]]
+                    matching = next(r for r in predictions if r["model"] == chosen
+                                    and r["date"] == row["date"] and r["item_id"] == row["item_id"])
+                    self.assertEqual(row["prediction"], matching["prediction"])
             self.assertTrue((output / "random_forest.joblib").is_file())
             self.assertEqual(json.loads((output / "forecast_report.json").read_text())["status"], "success")
             # A failed rerun must not retain a stale success report.

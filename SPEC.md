@@ -14,10 +14,12 @@ Giữ nguyên mã bàn giao `GuiDat/code/01` đến `10` cùng reports. Dùng Pa
 ## Phần source bổ sung và đầu ra
 1. Kiểm tra dữ liệu, môi trường và xuất báo cáo kiểm tra đầu vào.
 2. Spark tổng hợp doanh số, số lượng bán theo ngày, nhóm sản phẩm và cửa hàng; hỗ trợ đường dẫn Parquet local hoặc HDFS. Đường dẫn HDFS phải được kiểm thử riêng khi có dịch vụ.
-3. Demo dự báo số lượng bán cho 20 cặp sản phẩm–cửa hàng thuộc một cửa hàng. Chọn các chuỗi bằng dữ liệu tập huấn luyện; lưu danh sách lựa chọn. So sánh một dự báo đơn giản lặp tuần trước với một mô hình hồi quy Random Forest dùng lịch sử bán hàng và lịch ngày.
-4. Tách huấn luyện/validation/test theo ngày, hai khoảng cuối mỗi khoảng 28 ngày. Đánh giá MAE, RMSE; xuất dự báo, số thực tế và bảng so sánh. Dự báo nhiều ngày chỉ dùng lịch sử đã biết và dự báo trước đó, không dùng lượng bán thật trong tương lai để tạo đặc trưng.
+3. Demo dự báo số lượng bán cho 20 cặp sản phẩm–cửa hàng thuộc một cửa hàng. Chốt danh sách bằng dữ liệu trước cửa sổ validation đầu tiên. So sánh lặp tuần trước với Random Forest dùng lịch sử bán hàng và lịch ngày; chọn baseline hoặc RF cho từng chuỗi bằng validation.
+4. Tách theo ngày: bốn cửa sổ validation không chồng nhau, mỗi cửa sổ 28 ngày, rồi test 28 ngày. Thử cửa sổ train toàn bộ, 365 và 180 ngày. Đánh giá MAE, RMSE và tổng dự báo dư/thiếu; xuất dự báo, thực tế và bảng so sánh. Dự báo nhiều ngày chỉ dùng lịch sử đã biết và dự báo trước đó, không dùng lượng bán thật trong tương lai để tạo đặc trưng. Test đã được xem khi chẩn đoán nên kết quả cải tiến là đối chiếu hồi cứu, không coi là một test mới chưa từng xem.
 5. Demo trực quan có lựa chọn sản phẩm/cửa hàng, biểu đồ lịch sử, doanh thu, thực tế so với dự báo và bảng sai số. Xuất dữ liệu tổng hợp nhỏ để giao diện không đọc toàn bộ dữ liệu lớn.
 6. Có lệnh chạy, phiên bản môi trường, kiểm tra nhỏ cho logic mới và thông tin nguồn dữ liệu bàn giao.
+
+RF được thử thêm cách dự báo trực tiếp 28 đầu ra để so sánh với đệ quy, dùng cửa sổ và cấu hình cây tốt nhất của nhóm đệ quy. Cách trực tiếp tạo nhãn nhiều ngày chỉ trong phần quá khứ trước từng mốc; mọi lựa chọn vẫn dựa trên validation.
 
 ## Giả định để tiến hành ngay
 Đề tài đã được nhóm/giảng viên chấp thuận. Ưu tiên demo đúng trên một phạm vi dự báo nhỏ; Spark vẫn đọc và tổng hợp toàn bộ đầu vào. Không đặt ngưỡng chính xác tùy ý hoặc cam kết mô hình học máy luôn thắng baseline. Doanh thu được tính từ demand × sell_price; công bố mức bao phủ giá, không thay giá thiếu thành 0 hay tự điền bằng giá tương lai. Không làm Word, PPT, triển khai cloud hoặc giao diện quản trị trong phạm vi này.
