@@ -1,0 +1,154 @@
+======================================================================
+ADVANCED EDA - M5 SALES DATA
+======================================================================
+
+1. BASIC INFORMATION
+----------------------------------------------------------------------
+Total rows: 58327370
+Total columns: 15
+
+2. DEMAND DISTRIBUTION
+----------------------------------------------------------------------
+Average demand: 1.126322153733316
+Standard deviation: 3.8731084464719423
+Minimum demand: 0
+Maximum demand: 763
+
+3. ZERO-DEMAND ANALYSIS
+----------------------------------------------------------------------
+Zero-demand rows: 39777094
+Zero-demand percentage: 68.20%
+
+4. DEMAND BY CATEGORY
+----------------------------------------------------------------------
+FOODS: total=45089939, average=1.6402, std=5.1498
+HOUSEHOLD: total=14480670, average=0.7230, std=2.0864
+HOBBIES: total=6124800, average=0.5667, std=2.0366
+
+5. DEMAND BY STORE
+----------------------------------------------------------------------
+CA_3: total=11188180, average=1.9182, std=6.2085
+CA_1: total=7698216, average=1.3198, std=4.0587
+TX_2: total=7214384, average=1.2369, std=4.4213
+WI_2: total=6544012, average=1.1219, std=3.8666
+WI_3: total=6427782, average=1.1020, std=4.0653
+TX_3: total=6089330, average=1.0440, std=3.7964
+CA_2: total=5685475, average=0.9748, std=2.7597
+TX_1: total=5595292, average=0.9593, std=3.3272
+WI_1: total=5149062, average=0.8828, std=2.4244
+CA_4: total=4103676, average=0.7036, std=2.0043
+
+6. DEMAND BY STATE
+----------------------------------------------------------------------
+CA: total=28675547, average=1.2291
+TX: total=18899006, average=1.0801
+WI: total=18120856, average=1.0356
+
+7. DEMAND BY WEEKDAY
+----------------------------------------------------------------------
+Saturday: total=11383849, average=1.3626
+Sunday: total=11269626, average=1.3490
+Friday: total=9343694, average=1.1225
+Monday: total=8968860, average=1.0775
+Tuesday: total=8290677, average=0.9960
+Thursday: total=8245967, average=0.9907
+Wednesday: total=8192736, average=0.9843
+
+8. DEMAND BY MONTH
+----------------------------------------------------------------------
+Month 1: total=5345511, average=1.1096
+Month 2: total=5889589, average=1.1363
+Month 3: total=6387210, average=1.1263
+Month 4: total=5961011, average=1.1236
+Month 5: total=5038097, average=1.0660
+Month 6: total=5250212, average=1.1480
+Month 7: total=5443975, average=1.1519
+Month 8: total=5571730, average=1.1790
+Month 9: total=5321889, average=1.1636
+Month 10: total=5380589, average=1.1385
+Month 11: total=4993624, average=1.0919
+Month 12: total=5111972, average=1.0817
+
+9. DEMAND BY YEAR
+----------------------------------------------------------------------
+Year 2011: total=8856585, average=0.8619
+Year 2012: total=12061837, average=1.0809
+Year 2013: total=13135753, average=1.1803
+Year 2014: total=13089776, average=1.1762
+Year 2015: total=13800811, average=1.2401
+Year 2016: total=4750647, average=1.3549
+
+10. TOP 20 PRODUCTS
+----------------------------------------------------------------------
+FOODS_3_090 | FOODS | total=1002529 | average=52.4061
+FOODS_3_586 | FOODS | total=920242 | average=48.1047
+FOODS_3_252 | FOODS | total=565299 | average=29.5504
+FOODS_3_555 | FOODS | total=491287 | average=25.6815
+FOODS_3_714 | FOODS | total=396172 | average=20.7095
+FOODS_3_587 | FOODS | total=396119 | average=20.7067
+FOODS_3_694 | FOODS | total=390001 | average=20.3869
+FOODS_3_226 | FOODS | total=363082 | average=18.9797
+FOODS_3_202 | FOODS | total=295689 | average=15.4568
+FOODS_3_723 | FOODS | total=284333 | average=14.8632
+FOODS_3_120 | FOODS | total=283104 | average=14.7990
+FOODS_3_635 | FOODS | total=282134 | average=14.7482
+FOODS_3_808 | FOODS | total=281879 | average=14.7349
+FOODS_3_377 | FOODS | total=273289 | average=14.2859
+FOODS_3_541 | FOODS | total=272624 | average=14.2511
+FOODS_3_080 | FOODS | total=262650 | average=13.7297
+FOODS_3_318 | FOODS | total=260598 | average=13.6225
+FOODS_2_360 | FOODS | total=257119 | average=13.4406
+FOODS_3_234 | FOODS | total=251160 | average=13.1291
+FOODS_3_681 | FOODS | total=250018 | average=13.0694
+
+11. TOP STORES BY AVERAGE DEMAND
+----------------------------------------------------------------------
+CA_3: average=1.9182
+CA_1: average=1.3198
+TX_2: average=1.2369
+WI_2: average=1.1219
+WI_3: average=1.1020
+TX_3: average=1.0440
+CA_2: average=0.9748
+TX_1: average=0.9593
+WI_1: average=0.8828
+CA_4: average=0.7036
+
+12. EVENT IMPACT
+----------------------------------------------------------------------
+No Event: rows=53631910, total=60666516, average=1.1312
+Event: rows=4695460, total=5028893, average=1.0710
+
+13. PRICE INFORMATION
+----------------------------------------------------------------------
+Average price: 4.40808932481223
+Minimum price: 0.01
+Maximum price: 107.32
+
+snap_CA
+--------------------------------------------------
+snap_CA=0: rows=39118670, average=1.0957, total=42863114
+snap_CA=1: rows=19208700, average=1.1886, total=22832295
+
+snap_TX
+--------------------------------------------------
+snap_TX=0: rows=39118670, average=1.0909, total=42676445
+snap_TX=1: rows=19208700, average=1.1984, total=23018964
+
+snap_WI
+--------------------------------------------------
+snap_WI=0: rows=39118670, average=1.0902, total=42646582
+snap_WI=1: rows=19208700, average=1.1999, total=23048827
+
+14. KEY FINDINGS
+----------------------------------------------------------------------
+Highest demand category: FOODS
+Highest demand store: CA_3
+Highest demand state: CA
+Highest average demand weekday: Saturday
+
+15. DATASET CHARACTERISTICS
+----------------------------------------------------------------------
+The dataset contains daily product-level demand observations across multiple stores, states and categories.
+The dataset includes temporal, product, store, price, event and SNAP-related attributes.
+The processed data is stored in Parquet format and distributed across HDFS.

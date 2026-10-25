@@ -1,0 +1,818 @@
+26/10/20 22:32:48 INFO SparkContext: Running Spark version 3.5.9
+26/10/20 22:32:48 INFO SparkContext: OS info Windows 10, 10.0, amd64
+26/10/20 22:32:48 INFO SparkContext: Java version 1.8.0_251
+26/10/20 22:32:48 INFO ResourceUtils: ==============================================================
+26/10/20 22:32:48 INFO ResourceUtils: No custom resources configured for spark.driver.
+26/10/20 22:32:48 INFO ResourceUtils: ==============================================================
+26/10/20 22:32:48 INFO SparkContext: Submitted application: M5_Advanced_EDA
+26/10/20 22:32:48 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 4096, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+26/10/20 22:32:48 INFO ResourceProfile: Limiting resource is cpu
+26/10/20 22:32:48 INFO ResourceProfileManager: Added ResourceProfile id: 0
+26/10/20 22:32:48 INFO SecurityManager: Changing view acls to: ADMIN
+26/10/20 22:32:48 INFO SecurityManager: Changing modify acls to: ADMIN
+26/10/20 22:32:48 INFO SecurityManager: Changing view acls groups to: 
+26/10/20 22:32:48 INFO SecurityManager: Changing modify acls groups to: 
+26/10/20 22:32:48 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: ADMIN; groups with view permissions: EMPTY; users with modify permissions: ADMIN; groups with modify permissions: EMPTY
+26/10/20 22:32:51 INFO Utils: Successfully started service 'sparkDriver' on port 48477.
+26/10/20 22:32:51 INFO SparkEnv: Registering MapOutputTracker
+26/10/20 22:32:51 INFO SparkEnv: Registering BlockManagerMaster
+26/10/20 22:32:51 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+26/10/20 22:32:51 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+26/10/20 22:32:51 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+26/10/20 22:32:51 INFO DiskBlockManager: Created local directory at C:\Users\ADMIN\AppData\Local\Temp\blockmgr-3444682a-1be4-47f3-a48d-2fea43ee1b79
+26/10/20 22:32:51 INFO MemoryStore: MemoryStore started with capacity 366.3 MiB
+26/10/20 22:32:51 INFO SparkEnv: Registering OutputCommitCoordinator
+26/10/20 22:32:52 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+26/10/20 22:32:52 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+26/10/20 22:32:52 INFO Executor: Starting executor ID driver on host MSI
+26/10/20 22:32:52 INFO Executor: OS info Windows 10, 10.0, amd64
+26/10/20 22:32:52 INFO Executor: Java version 1.8.0_251
+26/10/20 22:32:52 INFO Executor: Starting executor with user classpath (userClassPathFirst = false): ''
+26/10/20 22:32:52 INFO Executor: Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@58c95a29 for default.
+26/10/20 22:32:52 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 48524.
+26/10/20 22:32:52 INFO NettyBlockTransferService: Server created on MSI:48524
+26/10/20 22:32:52 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+26/10/20 22:32:52 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, MSI, 48524, None)
+26/10/20 22:32:52 INFO BlockManagerMasterEndpoint: Registering block manager MSI:48524 with 366.3 MiB RAM, BlockManagerId(driver, MSI, 48524, None)
+26/10/20 22:32:52 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, MSI, 48524, None)
+26/10/20 22:32:52 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, MSI, 48524, None)
+======================================================================
+ADVANCED EDA - M5 SALES DATA
+======================================================================
+
+Loading data from HDFS...
+Data loaded successfully!
+26/10/20 22:33:42 WARN MemoryStore: Not enough space to cache rdd_6_10 in memory! (computed 27.0 MiB so far)
+26/10/20 22:33:42 WARN BlockManager: Persisting block rdd_6_10 to disk instead.
+26/10/20 22:33:43 WARN MemoryStore: Not enough space to cache rdd_6_5 in memory! (computed 27.0 MiB so far)
+26/10/20 22:33:43 WARN BlockManager: Persisting block rdd_6_5 to disk instead.
+26/10/20 22:33:43 WARN MemoryStore: Not enough space to cache rdd_6_4 in memory! (computed 27.0 MiB so far)
+26/10/20 22:33:43 WARN BlockManager: Persisting block rdd_6_4 to disk instead.
+26/10/20 22:33:56 WARN MemoryStore: Not enough space to cache rdd_6_9 in memory! (computed 42.2 MiB so far)
+26/10/20 22:33:56 WARN BlockManager: Persisting block rdd_6_9 to disk instead.
+26/10/20 22:34:00 WARN MemoryStore: Not enough space to cache rdd_6_0 in memory! (computed 26.9 MiB so far)
+26/10/20 22:34:00 WARN BlockManager: Persisting block rdd_6_0 to disk instead.
+26/10/20 22:34:00 WARN MemoryStore: Not enough space to cache rdd_6_6 in memory! (computed 27.0 MiB so far)
+26/10/20 22:34:00 WARN BlockManager: Persisting block rdd_6_6 to disk instead.
+26/10/20 22:34:16 WARN MemoryStore: Not enough space to cache rdd_6_7 in memory! (computed 42.2 MiB so far)
+26/10/20 22:34:16 WARN BlockManager: Persisting block rdd_6_7 to disk instead.
+26/10/20 22:34:25 WARN MemoryStore: Not enough space to cache rdd_6_3 in memory! (computed 65.0 MiB so far)
+26/10/20 22:34:25 WARN BlockManager: Persisting block rdd_6_3 to disk instead.
+26/10/20 22:34:25 WARN MemoryStore: Not enough space to cache rdd_6_8 in memory! (computed 65.0 MiB so far)
+26/10/20 22:34:25 WARN BlockManager: Persisting block rdd_6_8 to disk instead.
+26/10/20 22:34:39 WARN MemoryStore: Not enough space to cache rdd_6_3 in memory! (computed 42.2 MiB so far)
+26/10/20 22:34:39 WARN MemoryStore: Not enough space to cache rdd_6_8 in memory! (computed 42.2 MiB so far)
+26/10/20 22:34:44 WARN MemoryStore: Not enough space to cache rdd_6_5 in memory! (computed 15.5 MiB so far)
+26/10/20 22:34:44 WARN MemoryStore: Not enough space to cache rdd_6_1 in memory! (computed 65.0 MiB so far)
+26/10/20 22:34:44 WARN BlockManager: Persisting block rdd_6_1 to disk instead.
+26/10/20 22:34:44 WARN MemoryStore: Not enough space to cache rdd_6_4 in memory! (computed 7.8 MiB so far)
+26/10/20 22:34:45 WARN MemoryStore: Not enough space to cache rdd_6_10 in memory! (computed 15.5 MiB so far)
+26/10/20 22:34:53 WARN MemoryStore: Not enough space to cache rdd_6_7 in memory! (computed 15.5 MiB so far)
+26/10/20 22:34:53 WARN MemoryStore: Not enough space to cache rdd_6_0 in memory! (computed 7.8 MiB so far)
+26/10/20 22:34:53 WARN MemoryStore: Not enough space to cache rdd_6_1 in memory! (computed 15.5 MiB so far)
+26/10/20 22:34:54 WARN MemoryStore: Not enough space to cache rdd_6_6 in memory! (computed 15.5 MiB so far)
+26/10/20 22:34:54 WARN MemoryStore: Not enough space to cache rdd_6_12 in memory! (computed 27.0 MiB so far)
+26/10/20 22:34:54 WARN BlockManager: Persisting block rdd_6_12 to disk instead.
+26/10/20 22:34:55 WARN MemoryStore: Not enough space to cache rdd_6_15 in memory! (computed 27.0 MiB so far)
+26/10/20 22:34:55 WARN BlockManager: Persisting block rdd_6_15 to disk instead.
+26/10/20 22:35:01 WARN MemoryStore: Not enough space to cache rdd_6_14 in memory! (computed 42.2 MiB so far)
+26/10/20 22:35:01 WARN BlockManager: Persisting block rdd_6_14 to disk instead.
+26/10/20 22:35:15 WARN MemoryStore: Not enough space to cache rdd_6_12 in memory! (computed 7.8 MiB so far)
+26/10/20 22:35:16 WARN MemoryStore: Not enough space to cache rdd_6_15 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:16 WARN MemoryStore: Not enough space to cache rdd_6_14 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:16 WARN MemoryStore: Not enough space to cache rdd_6_10 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:16 WARN MemoryStore: Not enough space to cache rdd_6_6 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:16 WARN MemoryStore: Not enough space to cache rdd_6_1 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:16 WARN MemoryStore: Not enough space to cache rdd_6_0 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:16 WARN MemoryStore: Not enough space to cache rdd_6_7 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:16 WARN MemoryStore: Not enough space to cache rdd_6_5 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:16 WARN MemoryStore: Not enough space to cache rdd_6_8 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:17 WARN MemoryStore: Not enough space to cache rdd_6_4 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:17 WARN MemoryStore: Not enough space to cache rdd_6_3 in memory! (computed 7.8 MiB so far)
+26/10/20 22:35:17 WARN MemoryStore: Not enough space to cache rdd_6_12 in memory! (computed 7.8 MiB so far)
+26/10/20 22:35:17 WARN MemoryStore: Not enough space to cache rdd_6_14 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:18 WARN MemoryStore: Not enough space to cache rdd_6_15 in memory! (computed 15.5 MiB so far)
+
+Rows: 58327370
+
+======================================================================
+1. DEMAND DISTRIBUTION
+======================================================================
+26/10/20 22:35:19 WARN MemoryStore: Not enough space to cache rdd_6_5 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:19 WARN MemoryStore: Not enough space to cache rdd_6_3 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:19 WARN MemoryStore: Not enough space to cache rdd_6_6 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:19 WARN MemoryStore: Not enough space to cache rdd_6_10 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:19 WARN MemoryStore: Not enough space to cache rdd_6_1 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:19 WARN MemoryStore: Not enough space to cache rdd_6_8 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:19 WARN MemoryStore: Not enough space to cache rdd_6_0 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:19 WARN MemoryStore: Not enough space to cache rdd_6_4 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:19 WARN MemoryStore: Not enough space to cache rdd_6_7 in memory! (computed 7.8 MiB so far)
+26/10/20 22:35:20 WARN MemoryStore: Not enough space to cache rdd_6_12 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:20 WARN MemoryStore: Not enough space to cache rdd_6_14 in memory! (computed 7.8 MiB so far)
+26/10/20 22:35:21 WARN MemoryStore: Not enough space to cache rdd_6_15 in memory! (computed 15.5 MiB so far)
+Average demand: 1.126322153733316
+Std deviation: 3.8731084464719423
+Minimum: 0
+Maximum: 763
+
+======================================================================
+2. ZERO-DEMAND ANALYSIS
+======================================================================
+26/10/20 22:35:22 WARN MemoryStore: Not enough space to cache rdd_6_10 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:22 WARN MemoryStore: Not enough space to cache rdd_6_6 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:22 WARN MemoryStore: Not enough space to cache rdd_6_8 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:22 WARN MemoryStore: Not enough space to cache rdd_6_7 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:22 WARN MemoryStore: Not enough space to cache rdd_6_3 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:22 WARN MemoryStore: Not enough space to cache rdd_6_0 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:22 WARN MemoryStore: Not enough space to cache rdd_6_5 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:22 WARN MemoryStore: Not enough space to cache rdd_6_4 in memory! (computed 7.8 MiB so far)
+26/10/20 22:35:22 WARN MemoryStore: Not enough space to cache rdd_6_1 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:23 WARN MemoryStore: Not enough space to cache rdd_6_14 in memory! (computed 7.8 MiB so far)
+26/10/20 22:35:23 WARN MemoryStore: Not enough space to cache rdd_6_12 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:24 WARN MemoryStore: Not enough space to cache rdd_6_15 in memory! (computed 15.5 MiB so far)
+Zero-demand rows: 39777094
+Zero-demand percentage: 68.20 %
+
+======================================================================
+3. DEMAND BY CATEGORY
+======================================================================
+26/10/20 22:35:25 WARN MemoryStore: Not enough space to cache rdd_6_5 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:25 WARN MemoryStore: Not enough space to cache rdd_6_1 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:25 WARN MemoryStore: Not enough space to cache rdd_6_4 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:25 WARN MemoryStore: Not enough space to cache rdd_6_0 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:25 WARN MemoryStore: Not enough space to cache rdd_6_7 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:25 WARN MemoryStore: Not enough space to cache rdd_6_8 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:25 WARN MemoryStore: Not enough space to cache rdd_6_6 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:25 WARN MemoryStore: Not enough space to cache rdd_6_10 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:25 WARN MemoryStore: Not enough space to cache rdd_6_3 in memory! (computed 7.8 MiB so far)
+26/10/20 22:35:30 WARN MemoryStore: Not enough space to cache rdd_6_12 in memory! (computed 27.0 MiB so far)
+26/10/20 22:35:30 WARN MemoryStore: Not enough space to cache rdd_6_14 in memory! (computed 27.0 MiB so far)
+26/10/20 22:35:31 WARN MemoryStore: Not enough space to cache rdd_6_15 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:31 WARN MemoryStore: Not enough space to cache rdd_6_13 in memory! (computed 42.2 MiB so far)
++---------+------------+------------------+------------------+
+|cat_id   |total_demand|avg_demand        |std_demand        |
++---------+------------+------------------+------------------+
+|FOODS    |45089939    |1.6402419296459305|5.149801819461129 |
+|HOUSEHOLD|14480670    |0.7229812008621451|2.086400445648682 |
+|HOBBIES  |6124800     |0.5666677460690478|2.0366417006610638|
++---------+------------+------------------+------------------+
+
+26/10/20 22:35:35 WARN MemoryStore: Not enough space to cache rdd_6_10 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:35 WARN MemoryStore: Not enough space to cache rdd_6_6 in memory! (computed 7.8 MiB so far)
+26/10/20 22:35:35 WARN MemoryStore: Not enough space to cache rdd_6_3 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:35 WARN MemoryStore: Not enough space to cache rdd_6_4 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:35 WARN MemoryStore: Not enough space to cache rdd_6_0 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:35 WARN MemoryStore: Not enough space to cache rdd_6_7 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:35 WARN MemoryStore: Not enough space to cache rdd_6_5 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:35 WARN MemoryStore: Not enough space to cache rdd_6_1 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:35 WARN MemoryStore: Not enough space to cache rdd_6_8 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:36 WARN MemoryStore: Not enough space to cache rdd_6_12 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:36 WARN MemoryStore: Not enough space to cache rdd_6_13 in memory! (computed 4.1 MiB so far)
+26/10/20 22:35:37 WARN MemoryStore: Not enough space to cache rdd_6_14 in memory! (computed 7.8 MiB so far)
+26/10/20 22:35:39 WARN MemoryStore: Not enough space to cache rdd_6_15 in memory! (computed 65.0 MiB so far)
+
+======================================================================
+4. DEMAND BY STORE
+======================================================================
+26/10/20 22:35:42 WARN MemoryStore: Not enough space to cache rdd_6_10 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:42 WARN MemoryStore: Not enough space to cache rdd_6_4 in memory! (computed 7.8 MiB so far)
+26/10/20 22:35:42 WARN MemoryStore: Not enough space to cache rdd_6_5 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:42 WARN MemoryStore: Not enough space to cache rdd_6_1 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:42 WARN MemoryStore: Not enough space to cache rdd_6_0 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:42 WARN MemoryStore: Not enough space to cache rdd_6_7 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:42 WARN MemoryStore: Not enough space to cache rdd_6_3 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:42 WARN MemoryStore: Not enough space to cache rdd_6_8 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:42 WARN MemoryStore: Not enough space to cache rdd_6_6 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:42 WARN RowBasedKeyValueBatch: Failed to allocate page (1048576 bytes).
+26/10/20 22:35:45 WARN MemoryStore: Not enough space to cache rdd_6_13 in memory! (computed 27.0 MiB so far)
+26/10/20 22:35:45 WARN MemoryStore: Not enough space to cache rdd_6_14 in memory! (computed 27.0 MiB so far)
+26/10/20 22:35:45 WARN MemoryStore: Not enough space to cache rdd_6_12 in memory! (computed 42.2 MiB so far)
+26/10/20 22:35:46 WARN MemoryStore: Not enough space to cache rdd_6_15 in memory! (computed 4.1 MiB so far)
++--------+------------+------------------+------------------+
+|store_id|total_demand|avg_demand        |std_demand        |
++--------+------------+------------------+------------------+
+|CA_3    |11188180    |1.9181698060447436|6.208485547943514 |
+|CA_1    |7698216     |1.3198290956715517|4.058652095858955 |
+|TX_2    |7214384     |1.2368779871267983|4.421267271631807 |
+|WI_2    |6544012     |1.1219453234390646|3.8666384737770425|
+|WI_3    |6427782     |1.1020181434547796|4.065281127854439 |
+|TX_3    |6089330     |1.0439918686544585|3.7964000726886393|
+|CA_2    |5685475     |0.974752504698909 |2.759678838172962 |
+|TX_1    |5595292     |0.9592909812323099|3.3272319411412847|
+|WI_1    |5149062     |0.8827865888689992|2.4243961509847107|
+|CA_4    |4103676     |0.7035592381415449|2.0042745918603746|
++--------+------------+------------------+------------------+
+
+26/10/20 22:35:48 WARN MemoryStore: Not enough space to cache rdd_6_8 in memory! (computed 7.8 MiB so far)
+26/10/20 22:35:48 WARN MemoryStore: Not enough space to cache rdd_6_6 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:48 WARN MemoryStore: Not enough space to cache rdd_6_1 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:48 WARN MemoryStore: Not enough space to cache rdd_6_3 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:48 WARN MemoryStore: Not enough space to cache rdd_6_10 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:48 WARN MemoryStore: Not enough space to cache rdd_6_0 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:48 WARN MemoryStore: Not enough space to cache rdd_6_5 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:48 WARN MemoryStore: Not enough space to cache rdd_6_4 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:48 WARN MemoryStore: Not enough space to cache rdd_6_7 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:51 WARN MemoryStore: Not enough space to cache rdd_6_14 in memory! (computed 42.2 MiB so far)
+26/10/20 22:35:51 WARN MemoryStore: Not enough space to cache rdd_6_15 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:51 WARN MemoryStore: Not enough space to cache rdd_6_12 in memory! (computed 64.9 MiB so far)
+
+======================================================================
+5. DEMAND BY WEEKDAY
+======================================================================
+26/10/20 22:35:56 WARN MemoryStore: Not enough space to cache rdd_6_4 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:56 WARN MemoryStore: Not enough space to cache rdd_6_9 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:56 WARN MemoryStore: Not enough space to cache rdd_6_6 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:56 WARN MemoryStore: Not enough space to cache rdd_6_5 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:56 WARN MemoryStore: Not enough space to cache rdd_6_8 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:56 WARN MemoryStore: Not enough space to cache rdd_6_3 in memory! (computed 15.5 MiB so far)
+26/10/20 22:35:56 WARN MemoryStore: Not enough space to cache rdd_6_0 in memory! (computed 26.9 MiB so far)
+26/10/20 22:35:56 WARN MemoryStore: Not enough space to cache rdd_6_1 in memory! (computed 42.2 MiB so far)
+26/10/20 22:35:56 WARN MemoryStore: Not enough space to cache rdd_6_7 in memory! (computed 42.2 MiB so far)
+26/10/20 22:35:56 WARN MemoryStore: Not enough space to cache rdd_6_10 in memory! (computed 42.2 MiB so far)
+26/10/20 22:35:56 WARN MemoryStore: Not enough space to cache rdd_6_2 in memory! (computed 42.2 MiB so far)
+26/10/20 22:36:01 WARN MemoryStore: Not enough space to cache rdd_6_12 in memory! (computed 64.9 MiB so far)
+26/10/20 22:36:01 WARN MemoryStore: Not enough space to cache rdd_6_13 in memory! (computed 64.9 MiB so far)
+26/10/20 22:36:01 WARN MemoryStore: Not enough space to cache rdd_6_14 in memory! (computed 65.0 MiB so far)
+26/10/20 22:36:01 WARN MemoryStore: Not enough space to cache rdd_6_15 in memory! (computed 65.0 MiB so far)
++---------+------------+------------------+
+|weekday  |total_demand|avg_demand        |
++---------+------------+------------------+
+|Saturday |11383849    |1.3626400183858296|
+|Sunday   |11269626    |1.3489675925815092|
+|Friday   |9343694     |1.1225314971461249|
+|Monday   |8968860     |1.0774997387001324|
+|Tuesday  |8290677     |0.996024277460814 |
+|Thursday |8245967     |0.9906529132832839|
+|Wednesday|8192736     |0.9842578543136103|
++---------+------------+------------------+
+
+26/10/20 22:36:04 WARN MemoryStore: Not enough space to cache rdd_6_7 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:04 WARN MemoryStore: Not enough space to cache rdd_6_1 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:04 WARN MemoryStore: Not enough space to cache rdd_6_8 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:04 WARN MemoryStore: Not enough space to cache rdd_6_3 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:04 WARN MemoryStore: Not enough space to cache rdd_6_6 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:04 WARN MemoryStore: Not enough space to cache rdd_6_9 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:04 WARN MemoryStore: Not enough space to cache rdd_6_5 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:04 WARN MemoryStore: Not enough space to cache rdd_6_2 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:04 WARN RowBasedKeyValueBatch: Failed to allocate page (1048576 bytes).
+26/10/20 22:36:04 WARN MemoryStore: Not enough space to cache rdd_6_0 in memory! (computed 26.9 MiB so far)
+26/10/20 22:36:04 WARN MemoryStore: Not enough space to cache rdd_6_10 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:04 WARN MemoryStore: Not enough space to cache rdd_6_4 in memory! (computed 42.2 MiB so far)
+26/10/20 22:36:08 WARN MemoryStore: Not enough space to cache rdd_6_15 in memory! (computed 42.2 MiB so far)
+26/10/20 22:36:08 WARN MemoryStore: Not enough space to cache rdd_6_13 in memory! (computed 64.9 MiB so far)
+26/10/20 22:36:08 WARN MemoryStore: Not enough space to cache rdd_6_14 in memory! (computed 65.0 MiB so far)
+
+======================================================================
+6. DEMAND BY MONTH
+======================================================================
+26/10/20 22:36:12 WARN MemoryStore: Not enough space to cache rdd_6_10 in memory! (computed 15.5 MiB so far)
+26/10/20 22:36:12 WARN MemoryStore: Not enough space to cache rdd_6_4 in memory! (computed 15.5 MiB so far)
+26/10/20 22:36:12 WARN MemoryStore: Not enough space to cache rdd_6_5 in memory! (computed 15.5 MiB so far)
+26/10/20 22:36:12 WARN MemoryStore: Not enough space to cache rdd_6_1 in memory! (computed 15.5 MiB so far)
+26/10/20 22:36:12 WARN MemoryStore: Not enough space to cache rdd_6_6 in memory! (computed 15.5 MiB so far)
+26/10/20 22:36:12 WARN MemoryStore: Not enough space to cache rdd_6_3 in memory! (computed 15.5 MiB so far)
+26/10/20 22:36:12 WARN MemoryStore: Not enough space to cache rdd_6_7 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:13 WARN MemoryStore: Not enough space to cache rdd_6_2 in memory! (computed 65.0 MiB so far)
+26/10/20 22:36:14 WARN MemoryStore: Not enough space to cache rdd_6_9 in memory! (computed 65.0 MiB so far)
+26/10/20 22:36:14 WARN MemoryStore: Not enough space to cache rdd_6_0 in memory! (computed 65.0 MiB so far)
+26/10/20 22:36:14 WARN MemoryStore: Not enough space to cache rdd_6_8 in memory! (computed 65.0 MiB so far)
+26/10/20 22:36:14 WARN MemoryStore: Not enough space to cache rdd_6_12 in memory! (computed 15.5 MiB so far)
++-----+------------+------------------+
+|month|total_demand|avg_demand        |
++-----+------------+------------------+
+|1    |5345511     |1.109621125000519 |
+|2    |5889589     |1.1362624196940174|
+|3    |6387210     |1.1262656185528837|
+|4    |5961011     |1.1236039327007536|
+|5    |5038097     |1.0660495773336578|
+|6    |5250212     |1.1479637039466493|
+|7    |5443975     |1.151932415704779 |
+|8    |5571730     |1.1789650758048646|
+|9    |5321889     |1.1636359462118728|
+|10   |5380589     |1.1385200859086533|
+|11   |4993624     |1.0918605007106155|
+|12   |5111972     |1.081681355071467 |
++-----+------------+------------------+
+
+26/10/20 22:36:17 WARN MemoryStore: Not enough space to cache rdd_6_9 in memory! (computed 4.1 MiB so far)
+26/10/20 22:36:17 WARN MemoryStore: Not enough space to cache rdd_6_6 in memory! (computed 7.8 MiB so far)
+26/10/20 22:36:17 WARN MemoryStore: Not enough space to cache rdd_6_11 in memory! (computed 7.8 MiB so far)
+26/10/20 22:36:17 WARN MemoryStore: Not enough space to cache rdd_6_0 in memory! (computed 7.8 MiB so far)
+26/10/20 22:36:17 WARN MemoryStore: Not enough space to cache rdd_6_4 in memory! (computed 7.8 MiB so far)
+26/10/20 22:36:18 WARN MemoryStore: Not enough space to cache rdd_6_7 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:18 WARN MemoryStore: Not enough space to cache rdd_6_2 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:18 WARN MemoryStore: Not enough space to cache rdd_6_1 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:18 WARN MemoryStore: Not enough space to cache rdd_6_5 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:18 WARN MemoryStore: Not enough space to cache rdd_6_8 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:18 WARN MemoryStore: Not enough space to cache rdd_6_10 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:21 WARN MemoryStore: Not enough space to cache rdd_6_12 in memory! (computed 64.9 MiB so far)
+26/10/20 22:36:21 WARN MemoryStore: Not enough space to cache rdd_6_13 in memory! (computed 64.9 MiB so far)
+26/10/20 22:36:21 WARN MemoryStore: Not enough space to cache rdd_6_14 in memory! (computed 65.0 MiB so far)
+
+======================================================================
+7. DEMAND BY YEAR
+======================================================================
+26/10/20 22:36:22 WARN MemoryStore: Not enough space to cache rdd_6_9 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:23 WARN MemoryStore: Not enough space to cache rdd_6_2 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:23 WARN MemoryStore: Not enough space to cache rdd_6_5 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:23 WARN MemoryStore: Not enough space to cache rdd_6_10 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:23 WARN MemoryStore: Not enough space to cache rdd_6_0 in memory! (computed 26.9 MiB so far)
+26/10/20 22:36:23 WARN RowBasedKeyValueBatch: Failed to allocate page (1048576 bytes).
+26/10/20 22:36:23 WARN MemoryStore: Not enough space to cache rdd_6_8 in memory! (computed 27.0 MiB so far)
+26/10/20 22:36:23 WARN RowBasedKeyValueBatch: Failed to allocate page (1048576 bytes).
+26/10/20 22:36:23 ERROR Executor: Exception in task 0.0 in stage 55.0 (TID 212)
+org.apache.spark.memory.SparkOutOfMemoryError: [UNABLE_TO_ACQUIRE_MEMORY] Unable to acquire 262144 bytes of memory, got 170072.
+	at org.apache.spark.errors.SparkCoreErrors$.outOfMemoryError(SparkCoreErrors.scala:467)
+	at org.apache.spark.errors.SparkCoreErrors.outOfMemoryError(SparkCoreErrors.scala)
+	at org.apache.spark.memory.MemoryConsumer.throwOom(MemoryConsumer.java:157)
+	at org.apache.spark.memory.MemoryConsumer.allocateArray(MemoryConsumer.java:98)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.allocate(BytesToBytesMap.java:865)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:200)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:207)
+	at org.apache.spark.sql.execution.UnsafeFixedWidthAggregationMap.<init>(UnsafeFixedWidthAggregationMap.java:96)
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.createHashMap(HashAggregateExec.scala:171)
+	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)
+	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+	at org.apache.spark.sql.execution.WholeStageCodegenEvaluatorFactory$WholeStageCodegenPartitionEvaluator$$anon$1.hasNext(WholeStageCodegenEvaluatorFactory.scala:43)
+	at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:460)
+	at org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:140)
+	at org.apache.spark.shuffle.ShuffleWriteProcessor.write(ShuffleWriteProcessor.scala:59)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:104)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:54)
+	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+26/10/20 22:36:23 WARN TaskSetManager: Lost task 0.0 in stage 55.0 (TID 212) (MSI executor driver): org.apache.spark.memory.SparkOutOfMemoryError: [UNABLE_TO_ACQUIRE_MEMORY] Unable to acquire 262144 bytes of memory, got 170072.
+	at org.apache.spark.errors.SparkCoreErrors$.outOfMemoryError(SparkCoreErrors.scala:467)
+	at org.apache.spark.errors.SparkCoreErrors.outOfMemoryError(SparkCoreErrors.scala)
+	at org.apache.spark.memory.MemoryConsumer.throwOom(MemoryConsumer.java:157)
+	at org.apache.spark.memory.MemoryConsumer.allocateArray(MemoryConsumer.java:98)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.allocate(BytesToBytesMap.java:865)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:200)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:207)
+	at org.apache.spark.sql.execution.UnsafeFixedWidthAggregationMap.<init>(UnsafeFixedWidthAggregationMap.java:96)
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.createHashMap(HashAggregateExec.scala:171)
+	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)
+	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+	at org.apache.spark.sql.execution.WholeStageCodegenEvaluatorFactory$WholeStageCodegenPartitionEvaluator$$anon$1.hasNext(WholeStageCodegenEvaluatorFactory.scala:43)
+	at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:460)
+	at org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:140)
+	at org.apache.spark.shuffle.ShuffleWriteProcessor.write(ShuffleWriteProcessor.scala:59)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:104)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:54)
+	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+26/10/20 22:36:23 ERROR TaskSetManager: Task 0 in stage 55.0 failed 1 times; aborting job
+26/10/20 22:36:23 WARN TaskSetManager: Lost task 9.0 in stage 55.0 (TID 221) (MSI executor driver): TaskKilled (Stage cancelled: Job aborted due to stage failure: Task 0 in stage 55.0 failed 1 times, most recent failure: Lost task 0.0 in stage 55.0 (TID 212) (MSI executor driver): org.apache.spark.memory.SparkOutOfMemoryError: [UNABLE_TO_ACQUIRE_MEMORY] Unable to acquire 262144 bytes of memory, got 170072.
+	at org.apache.spark.errors.SparkCoreErrors$.outOfMemoryError(SparkCoreErrors.scala:467)
+	at org.apache.spark.errors.SparkCoreErrors.outOfMemoryError(SparkCoreErrors.scala)
+	at org.apache.spark.memory.MemoryConsumer.throwOom(MemoryConsumer.java:157)
+	at org.apache.spark.memory.MemoryConsumer.allocateArray(MemoryConsumer.java:98)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.allocate(BytesToBytesMap.java:865)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:200)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:207)
+	at org.apache.spark.sql.execution.UnsafeFixedWidthAggregationMap.<init>(UnsafeFixedWidthAggregationMap.java:96)
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.createHashMap(HashAggregateExec.scala:171)
+	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)
+	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+	at org.apache.spark.sql.execution.WholeStageCodegenEvaluatorFactory$WholeStageCodegenPartitionEvaluator$$anon$1.hasNext(WholeStageCodegenEvaluatorFactory.scala:43)
+	at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:460)
+	at org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:140)
+	at org.apache.spark.shuffle.ShuffleWriteProcessor.write(ShuffleWriteProcessor.scala:59)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:104)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:54)
+	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+Driver stacktrace:)
+26/10/20 22:36:23 WARN TaskSetManager: Lost task 8.0 in stage 55.0 (TID 220) (MSI executor driver): TaskKilled (Stage cancelled: Job aborted due to stage failure: Task 0 in stage 55.0 failed 1 times, most recent failure: Lost task 0.0 in stage 55.0 (TID 212) (MSI executor driver): org.apache.spark.memory.SparkOutOfMemoryError: [UNABLE_TO_ACQUIRE_MEMORY] Unable to acquire 262144 bytes of memory, got 170072.
+	at org.apache.spark.errors.SparkCoreErrors$.outOfMemoryError(SparkCoreErrors.scala:467)
+	at org.apache.spark.errors.SparkCoreErrors.outOfMemoryError(SparkCoreErrors.scala)
+	at org.apache.spark.memory.MemoryConsumer.throwOom(MemoryConsumer.java:157)
+	at org.apache.spark.memory.MemoryConsumer.allocateArray(MemoryConsumer.java:98)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.allocate(BytesToBytesMap.java:865)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:200)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:207)
+	at org.apache.spark.sql.execution.UnsafeFixedWidthAggregationMap.<init>(UnsafeFixedWidthAggregationMap.java:96)
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.createHashMap(HashAggregateExec.scala:171)
+	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)
+	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+	at org.apache.spark.sql.execution.WholeStageCodegenEvaluatorFactory$WholeStageCodegenPartitionEvaluator$$anon$1.hasNext(WholeStageCodegenEvaluatorFactory.scala:43)
+	at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:460)
+	at org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:140)
+	at org.apache.spark.shuffle.ShuffleWriteProcessor.write(ShuffleWriteProcessor.scala:59)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:104)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:54)
+	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+Driver stacktrace:)
+26/10/20 22:36:23 WARN TaskSetManager: Lost task 10.0 in stage 55.0 (TID 222) (MSI executor driver): TaskKilled (Stage cancelled: Job aborted due to stage failure: Task 0 in stage 55.0 failed 1 times, most recent failure: Lost task 0.0 in stage 55.0 (TID 212) (MSI executor driver): org.apache.spark.memory.SparkOutOfMemoryError: [UNABLE_TO_ACQUIRE_MEMORY] Unable to acquire 262144 bytes of memory, got 170072.
+	at org.apache.spark.errors.SparkCoreErrors$.outOfMemoryError(SparkCoreErrors.scala:467)
+	at org.apache.spark.errors.SparkCoreErrors.outOfMemoryError(SparkCoreErrors.scala)
+	at org.apache.spark.memory.MemoryConsumer.throwOom(MemoryConsumer.java:157)
+	at org.apache.spark.memory.MemoryConsumer.allocateArray(MemoryConsumer.java:98)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.allocate(BytesToBytesMap.java:865)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:200)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:207)
+	at org.apache.spark.sql.execution.UnsafeFixedWidthAggregationMap.<init>(UnsafeFixedWidthAggregationMap.java:96)
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.createHashMap(HashAggregateExec.scala:171)
+	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)
+	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+	at org.apache.spark.sql.execution.WholeStageCodegenEvaluatorFactory$WholeStageCodegenPartitionEvaluator$$anon$1.hasNext(WholeStageCodegenEvaluatorFactory.scala:43)
+	at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:460)
+	at org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:140)
+	at org.apache.spark.shuffle.ShuffleWriteProcessor.write(ShuffleWriteProcessor.scala:59)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:104)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:54)
+	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+Driver stacktrace:)
+26/10/20 22:36:23 WARN TaskSetManager: Lost task 5.0 in stage 55.0 (TID 217) (MSI executor driver): TaskKilled (Stage cancelled: Job aborted due to stage failure: Task 0 in stage 55.0 failed 1 times, most recent failure: Lost task 0.0 in stage 55.0 (TID 212) (MSI executor driver): org.apache.spark.memory.SparkOutOfMemoryError: [UNABLE_TO_ACQUIRE_MEMORY] Unable to acquire 262144 bytes of memory, got 170072.
+	at org.apache.spark.errors.SparkCoreErrors$.outOfMemoryError(SparkCoreErrors.scala:467)
+	at org.apache.spark.errors.SparkCoreErrors.outOfMemoryError(SparkCoreErrors.scala)
+	at org.apache.spark.memory.MemoryConsumer.throwOom(MemoryConsumer.java:157)
+	at org.apache.spark.memory.MemoryConsumer.allocateArray(MemoryConsumer.java:98)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.allocate(BytesToBytesMap.java:865)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:200)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:207)
+	at org.apache.spark.sql.execution.UnsafeFixedWidthAggregationMap.<init>(UnsafeFixedWidthAggregationMap.java:96)
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.createHashMap(HashAggregateExec.scala:171)
+	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)
+	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+	at org.apache.spark.sql.execution.WholeStageCodegenEvaluatorFactory$WholeStageCodegenPartitionEvaluator$$anon$1.hasNext(WholeStageCodegenEvaluatorFactory.scala:43)
+	at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:460)
+	at org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:140)
+	at org.apache.spark.shuffle.ShuffleWriteProcessor.write(ShuffleWriteProcessor.scala:59)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:104)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:54)
+	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+Driver stacktrace:)
+26/10/20 22:36:23 WARN TaskSetManager: Lost task 2.0 in stage 55.0 (TID 214) (MSI executor driver): TaskKilled (Stage cancelled: Job aborted due to stage failure: Task 0 in stage 55.0 failed 1 times, most recent failure: Lost task 0.0 in stage 55.0 (TID 212) (MSI executor driver): org.apache.spark.memory.SparkOutOfMemoryError: [UNABLE_TO_ACQUIRE_MEMORY] Unable to acquire 262144 bytes of memory, got 170072.
+	at org.apache.spark.errors.SparkCoreErrors$.outOfMemoryError(SparkCoreErrors.scala:467)
+	at org.apache.spark.errors.SparkCoreErrors.outOfMemoryError(SparkCoreErrors.scala)
+	at org.apache.spark.memory.MemoryConsumer.throwOom(MemoryConsumer.java:157)
+	at org.apache.spark.memory.MemoryConsumer.allocateArray(MemoryConsumer.java:98)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.allocate(BytesToBytesMap.java:865)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:200)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:207)
+	at org.apache.spark.sql.execution.UnsafeFixedWidthAggregationMap.<init>(UnsafeFixedWidthAggregationMap.java:96)
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.createHashMap(HashAggregateExec.scala:171)
+	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)
+	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+	at org.apache.spark.sql.execution.WholeStageCodegenEvaluatorFactory$WholeStageCodegenPartitionEvaluator$$anon$1.hasNext(WholeStageCodegenEvaluatorFactory.scala:43)
+	at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:460)
+	at org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:140)
+	at org.apache.spark.shuffle.ShuffleWriteProcessor.write(ShuffleWriteProcessor.scala:59)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:104)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:54)
+	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+Driver stacktrace:)
+26/10/20 22:36:23 WARN MemoryStore: Not enough space to cache rdd_6_6 in memory! (computed 42.2 MiB so far)
+26/10/20 22:36:23 WARN TaskSetManager: Lost task 6.0 in stage 55.0 (TID 218) (MSI executor driver): TaskKilled (Stage cancelled: Job aborted due to stage failure: Task 0 in stage 55.0 failed 1 times, most recent failure: Lost task 0.0 in stage 55.0 (TID 212) (MSI executor driver): org.apache.spark.memory.SparkOutOfMemoryError: [UNABLE_TO_ACQUIRE_MEMORY] Unable to acquire 262144 bytes of memory, got 170072.
+	at org.apache.spark.errors.SparkCoreErrors$.outOfMemoryError(SparkCoreErrors.scala:467)
+	at org.apache.spark.errors.SparkCoreErrors.outOfMemoryError(SparkCoreErrors.scala)
+	at org.apache.spark.memory.MemoryConsumer.throwOom(MemoryConsumer.java:157)
+	at org.apache.spark.memory.MemoryConsumer.allocateArray(MemoryConsumer.java:98)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.allocate(BytesToBytesMap.java:865)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:200)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:207)
+	at org.apache.spark.sql.execution.UnsafeFixedWidthAggregationMap.<init>(UnsafeFixedWidthAggregationMap.java:96)
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.createHashMap(HashAggregateExec.scala:171)
+	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)
+	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+	at org.apache.spark.sql.execution.WholeStageCodegenEvaluatorFactory$WholeStageCodegenPartitionEvaluator$$anon$1.hasNext(WholeStageCodegenEvaluatorFactory.scala:43)
+	at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:460)
+	at org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:140)
+	at org.apache.spark.shuffle.ShuffleWriteProcessor.write(ShuffleWriteProcessor.scala:59)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:104)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:54)
+	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+Driver stacktrace:)
+Traceback (most recent call last):
+  File "D:\BigData\DoAn\code\09_advanced_eda.py", line 279, in <module>
+    yearly.show(truncate=False)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "D:\BigData\spark-3.5.9-bin-hadoop3\python\lib\pyspark.zip\pyspark\sql\dataframe.py", line 946, in show
+    print(self._show_string(n, truncate, vertical))
+          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\BigData\spark-3.5.9-bin-hadoop3\python\lib\pyspark.zip\pyspark\sql\dataframe.py", line 977, in _show_string
+    return self._jdf.showString(n, int_truncate, vertical)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\BigData\spark-3.5.9-bin-hadoop3\python\lib\py4j-0.10.9.7-src.zip\py4j\java_gateway.py", line 1322, in __call__
+    return_value = get_return_value(
+        answer, self.gateway_client, self.target_id, self.name)
+  File "D:\BigData\spark-3.5.9-bin-hadoop3\python\lib\pyspark.zip\pyspark\errors\exceptions\captured.py", line 179, in deco
+    return f(*a, **kw)
+  File "D:\BigData\spark-3.5.9-bin-hadoop3\python\lib\py4j-0.10.9.7-src.zip\py4j\protocol.py", line 326, in get_return_value
+    raise Py4JJavaError(
+        "An error occurred while calling {0}{1}{2}.\n".
+        format(target_id, ".", name), value)
+py4j.protocol.Py4JJavaError: An error occurred while calling o171.showString.
+: org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 55.0 failed 1 times, most recent failure: Lost task 0.0 in stage 55.0 (TID 212) (MSI executor driver): org.apache.spark.memory.SparkOutOfMemoryError: [UNABLE_TO_ACQUIRE_MEMORY] Unable to acquire 262144 bytes of memory, got 170072.
+	at org.apache.spark.errors.SparkCoreErrors$.outOfMemoryError(SparkCoreErrors.scala:467)
+	at org.apache.spark.errors.SparkCoreErrors.outOfMemoryError(SparkCoreErrors.scala)
+	at org.apache.spark.memory.MemoryConsumer.throwOom(MemoryConsumer.java:157)
+	at org.apache.spark.memory.MemoryConsumer.allocateArray(MemoryConsumer.java:98)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.allocate(BytesToBytesMap.java:865)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:200)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:207)
+	at org.apache.spark.sql.execution.UnsafeFixedWidthAggregationMap.<init>(UnsafeFixedWidthAggregationMap.java:96)
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.createHashMap(HashAggregateExec.scala:171)
+	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)
+	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+	at org.apache.spark.sql.execution.WholeStageCodegenEvaluatorFactory$WholeStageCodegenPartitionEvaluator$$anon$1.hasNext(WholeStageCodegenEvaluatorFactory.scala:43)
+	at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:460)
+	at org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:140)
+	at org.apache.spark.shuffle.ShuffleWriteProcessor.write(ShuffleWriteProcessor.scala:59)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:104)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:54)
+	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+Driver stacktrace:
+	at org.apache.spark.scheduler.DAGScheduler.failJobAndIndependentStages(DAGScheduler.scala:2898)
+	at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2(DAGScheduler.scala:2834)
+	at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2$adapted(DAGScheduler.scala:2833)
+	at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)
+	at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)
+	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)
+	at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:2833)
+	at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1(DAGScheduler.scala:1253)
+	at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1$adapted(DAGScheduler.scala:1253)
+	at scala.Option.foreach(Option.scala:407)
+	at org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:1253)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:3102)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:3036)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:3025)
+	at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)
+Caused by: org.apache.spark.memory.SparkOutOfMemoryError: [UNABLE_TO_ACQUIRE_MEMORY] Unable to acquire 262144 bytes of memory, got 170072.
+	at org.apache.spark.errors.SparkCoreErrors$.outOfMemoryError(SparkCoreErrors.scala:467)
+	at org.apache.spark.errors.SparkCoreErrors.outOfMemoryError(SparkCoreErrors.scala)
+	at org.apache.spark.memory.MemoryConsumer.throwOom(MemoryConsumer.java:157)
+	at org.apache.spark.memory.MemoryConsumer.allocateArray(MemoryConsumer.java:98)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.allocate(BytesToBytesMap.java:865)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:200)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:207)
+	at org.apache.spark.sql.execution.UnsafeFixedWidthAggregationMap.<init>(UnsafeFixedWidthAggregationMap.java:96)
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.createHashMap(HashAggregateExec.scala:171)
+	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)
+	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+	at org.apache.spark.sql.execution.WholeStageCodegenEvaluatorFactory$WholeStageCodegenPartitionEvaluator$$anon$1.hasNext(WholeStageCodegenEvaluatorFactory.scala:43)
+	at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:460)
+	at org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:140)
+	at org.apache.spark.shuffle.ShuffleWriteProcessor.write(ShuffleWriteProcessor.scala:59)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:104)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:54)
+	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+26/10/20 22:36:24 WARN MemoryStore: Not enough space to cache rdd_6_11 in memory! (computed 64.9 MiB so far)
+26/10/20 22:36:24 WARN TaskSetManager: Lost task 11.0 in stage 55.0 (TID 223) (MSI executor driver): TaskKilled (Stage cancelled: Job aborted due to stage failure: Task 0 in stage 55.0 failed 1 times, most recent failure: Lost task 0.0 in stage 55.0 (TID 212) (MSI executor driver): org.apache.spark.memory.SparkOutOfMemoryError: [UNABLE_TO_ACQUIRE_MEMORY] Unable to acquire 262144 bytes of memory, got 170072.
+	at org.apache.spark.errors.SparkCoreErrors$.outOfMemoryError(SparkCoreErrors.scala:467)
+	at org.apache.spark.errors.SparkCoreErrors.outOfMemoryError(SparkCoreErrors.scala)
+	at org.apache.spark.memory.MemoryConsumer.throwOom(MemoryConsumer.java:157)
+	at org.apache.spark.memory.MemoryConsumer.allocateArray(MemoryConsumer.java:98)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.allocate(BytesToBytesMap.java:865)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:200)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:207)
+	at org.apache.spark.sql.execution.UnsafeFixedWidthAggregationMap.<init>(UnsafeFixedWidthAggregationMap.java:96)
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.createHashMap(HashAggregateExec.scala:171)
+	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)
+	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+	at org.apache.spark.sql.execution.WholeStageCodegenEvaluatorFactory$WholeStageCodegenPartitionEvaluator$$anon$1.hasNext(WholeStageCodegenEvaluatorFactory.scala:43)
+	at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:460)
+	at org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:140)
+	at org.apache.spark.shuffle.ShuffleWriteProcessor.write(ShuffleWriteProcessor.scala:59)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:104)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:54)
+	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+Driver stacktrace:)
+26/10/20 22:36:24 WARN MemoryStore: Not enough space to cache rdd_6_4 in memory! (computed 64.9 MiB so far)
+26/10/20 22:36:24 WARN TaskSetManager: Lost task 4.0 in stage 55.0 (TID 216) (MSI executor driver): TaskKilled (Stage cancelled: Job aborted due to stage failure: Task 0 in stage 55.0 failed 1 times, most recent failure: Lost task 0.0 in stage 55.0 (TID 212) (MSI executor driver): org.apache.spark.memory.SparkOutOfMemoryError: [UNABLE_TO_ACQUIRE_MEMORY] Unable to acquire 262144 bytes of memory, got 170072.
+	at org.apache.spark.errors.SparkCoreErrors$.outOfMemoryError(SparkCoreErrors.scala:467)
+	at org.apache.spark.errors.SparkCoreErrors.outOfMemoryError(SparkCoreErrors.scala)
+	at org.apache.spark.memory.MemoryConsumer.throwOom(MemoryConsumer.java:157)
+	at org.apache.spark.memory.MemoryConsumer.allocateArray(MemoryConsumer.java:98)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.allocate(BytesToBytesMap.java:865)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:200)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:207)
+	at org.apache.spark.sql.execution.UnsafeFixedWidthAggregationMap.<init>(UnsafeFixedWidthAggregationMap.java:96)
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.createHashMap(HashAggregateExec.scala:171)
+	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)
+	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+	at org.apache.spark.sql.execution.WholeStageCodegenEvaluatorFactory$WholeStageCodegenPartitionEvaluator$$anon$1.hasNext(WholeStageCodegenEvaluatorFactory.scala:43)
+	at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:460)
+	at org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:140)
+	at org.apache.spark.shuffle.ShuffleWriteProcessor.write(ShuffleWriteProcessor.scala:59)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:104)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:54)
+	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+Driver stacktrace:)
+26/10/20 22:36:24 WARN TaskSetManager: Lost task 3.0 in stage 55.0 (TID 215) (MSI executor driver): TaskKilled (Stage cancelled: Job aborted due to stage failure: Task 0 in stage 55.0 failed 1 times, most recent failure: Lost task 0.0 in stage 55.0 (TID 212) (MSI executor driver): org.apache.spark.memory.SparkOutOfMemoryError: [UNABLE_TO_ACQUIRE_MEMORY] Unable to acquire 262144 bytes of memory, got 170072.
+	at org.apache.spark.errors.SparkCoreErrors$.outOfMemoryError(SparkCoreErrors.scala:467)
+	at org.apache.spark.errors.SparkCoreErrors.outOfMemoryError(SparkCoreErrors.scala)
+	at org.apache.spark.memory.MemoryConsumer.throwOom(MemoryConsumer.java:157)
+	at org.apache.spark.memory.MemoryConsumer.allocateArray(MemoryConsumer.java:98)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.allocate(BytesToBytesMap.java:865)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:200)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:207)
+	at org.apache.spark.sql.execution.UnsafeFixedWidthAggregationMap.<init>(UnsafeFixedWidthAggregationMap.java:96)
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.createHashMap(HashAggregateExec.scala:171)
+	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)
+	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+	at org.apache.spark.sql.execution.WholeStageCodegenEvaluatorFactory$WholeStageCodegenPartitionEvaluator$$anon$1.hasNext(WholeStageCodegenEvaluatorFactory.scala:43)
+	at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:460)
+	at org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:140)
+	at org.apache.spark.shuffle.ShuffleWriteProcessor.write(ShuffleWriteProcessor.scala:59)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:104)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:54)
+	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+Driver stacktrace:)
+26/10/20 22:36:24 WARN TaskSetManager: Lost task 1.0 in stage 55.0 (TID 213) (MSI executor driver): TaskKilled (Stage cancelled: Job aborted due to stage failure: Task 0 in stage 55.0 failed 1 times, most recent failure: Lost task 0.0 in stage 55.0 (TID 212) (MSI executor driver): org.apache.spark.memory.SparkOutOfMemoryError: [UNABLE_TO_ACQUIRE_MEMORY] Unable to acquire 262144 bytes of memory, got 170072.
+	at org.apache.spark.errors.SparkCoreErrors$.outOfMemoryError(SparkCoreErrors.scala:467)
+	at org.apache.spark.errors.SparkCoreErrors.outOfMemoryError(SparkCoreErrors.scala)
+	at org.apache.spark.memory.MemoryConsumer.throwOom(MemoryConsumer.java:157)
+	at org.apache.spark.memory.MemoryConsumer.allocateArray(MemoryConsumer.java:98)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.allocate(BytesToBytesMap.java:865)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:200)
+	at org.apache.spark.unsafe.map.BytesToBytesMap.<init>(BytesToBytesMap.java:207)
+	at org.apache.spark.sql.execution.UnsafeFixedWidthAggregationMap.<init>(UnsafeFixedWidthAggregationMap.java:96)
+	at org.apache.spark.sql.execution.aggregate.HashAggregateExec.createHashMap(HashAggregateExec.scala:171)
+	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)
+	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+	at org.apache.spark.sql.execution.WholeStageCodegenEvaluatorFactory$WholeStageCodegenPartitionEvaluator$$anon$1.hasNext(WholeStageCodegenEvaluatorFactory.scala:43)
+	at scala.collection.Iterator$$anon$10.hasNext(Iterator.scala:460)
+	at org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:140)
+	at org.apache.spark.shuffle.ShuffleWriteProcessor.write(ShuffleWriteProcessor.scala:59)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:104)
+	at org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:54)
+	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:166)
+	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:621)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:624)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+Driver stacktrace:)
+26/10/20 22:36:25 ERROR DiskBlockManager: Exception while deleting local spark dir: C:\Users\ADMIN\AppData\Local\Temp\blockmgr-3444682a-1be4-47f3-a48d-2fea43ee1b79
+java.io.IOException: Failed to delete: C:\Users\ADMIN\AppData\Local\Temp\blockmgr-3444682a-1be4-47f3-a48d-2fea43ee1b79\1e\rdd_6_4
+	at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:147)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:117)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:130)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:117)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingJavaIO(JavaUtils.java:130)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:117)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:90)
+	at org.apache.spark.util.SparkFileUtils.deleteRecursively(SparkFileUtils.scala:121)
+	at org.apache.spark.util.SparkFileUtils.deleteRecursively$(SparkFileUtils.scala:120)
+	at org.apache.spark.util.Utils$.deleteRecursively(Utils.scala:1126)
+	at org.apache.spark.storage.DiskBlockManager.$anonfun$doStop$1(DiskBlockManager.scala:368)
+	at org.apache.spark.storage.DiskBlockManager.$anonfun$doStop$1$adapted(DiskBlockManager.scala:364)
+	at scala.collection.IndexedSeqOptimized.foreach(IndexedSeqOptimized.scala:36)
+	at scala.collection.IndexedSeqOptimized.foreach$(IndexedSeqOptimized.scala:33)
+	at scala.collection.mutable.ArrayOps$ofRef.foreach(ArrayOps.scala:198)
+	at org.apache.spark.storage.DiskBlockManager.doStop(DiskBlockManager.scala:364)
+	at org.apache.spark.storage.DiskBlockManager.stop(DiskBlockManager.scala:359)
+	at org.apache.spark.storage.BlockManager.stop(BlockManager.scala:2122)
+	at org.apache.spark.SparkEnv.stop(SparkEnv.scala:95)
+	at org.apache.spark.SparkContext.$anonfun$stop$25(SparkContext.scala:2305)
+	at org.apache.spark.util.Utils$.tryLogNonFatalError(Utils.scala:1375)
+	at org.apache.spark.SparkContext.stop(SparkContext.scala:2305)
+	at org.apache.spark.SparkContext.stop(SparkContext.scala:2211)
+	at org.apache.spark.SparkContext.$anonfun$new$34(SparkContext.scala:681)
+	at org.apache.spark.util.SparkShutdownHook.run(ShutdownHookManager.scala:214)
+	at org.apache.spark.util.SparkShutdownHookManager.$anonfun$runAll$2(ShutdownHookManager.scala:188)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at org.apache.spark.util.Utils$.logUncaughtExceptions(Utils.scala:1928)
+	at org.apache.spark.util.SparkShutdownHookManager.$anonfun$runAll$1(ShutdownHookManager.scala:188)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at scala.util.Try$.apply(Try.scala:213)
+	at org.apache.spark.util.SparkShutdownHookManager.runAll(ShutdownHookManager.scala:188)
+	at org.apache.spark.util.SparkShutdownHookManager$$anon$2.run(ShutdownHookManager.scala:178)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
