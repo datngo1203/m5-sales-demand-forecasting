@@ -1,7 +1,9 @@
 import csv
 from datetime import date,timedelta
 import importlib.util
+import json
 from pathlib import Path
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -56,6 +58,32 @@ class PipelineTests(unittest.TestCase):
         self.assertIn("[switch]$V1",text)
         self.assertIn("if ($V1) { '13_forecasting_v1.py' } else { '15_forecasting_v3.py' }",text)
         self.assertEqual((ROOT/"code/13_forecasting.py").read_bytes(),(ROOT/"code/13_forecasting_v1.py").read_bytes())
+
+    def test_cli_uses_runtime_config_without_research_reports(self):
+        with tempfile.TemporaryDirectory() as folder:
+            folder=Path(folder)
+            (folder/"config").mkdir()
+            (folder/"config/forecast.json").write_text(json.dumps({"enabled":True,"selected_candidate":"blend"}))
+            with patch.object(pipeline,"ROOT",folder), patch.object(sys,"argv",["forecast"]), \
+                 patch.object(pipeline,"obtain_bundle",return_value=self.fixture()) as obtain, \
+                 patch.object(pipeline,"export",return_value={"reused_predictions":True}) as export:
+                pipeline.main()
+                obtain.assert_called_once()
+                self.assertEqual(export.call_args.args[-1],"blend")
+            self.assertFalse((folder/"docs/review").exists())
+
+    def test_cli_rejects_disabled_or_unknown_config_before_training(self):
+        with tempfile.TemporaryDirectory() as folder:
+            folder=Path(folder)
+            (folder/"config").mkdir()
+            with patch.object(pipeline,"ROOT",folder), patch.object(sys,"argv",["forecast"]), \
+                 patch.object(pipeline,"obtain_bundle") as obtain:
+                for settings in ({"enabled":False}, {"enabled":"true","selected_candidate":"blend"},
+                                 {"enabled":True,"selected_candidate":"unknown"}, []):
+                    (folder/"config/forecast.json").write_text(json.dumps(settings))
+                    with self.assertRaises(ValueError):
+                        pipeline.main()
+                obtain.assert_not_called()
 
     def test_new_store_without_v2_outputs_fits_once_then_reuses_own_cache(self):
         bundle=self.fixture()

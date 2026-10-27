@@ -1,4 +1,4 @@
-"""Opt-in V2 experiment helpers. The default V1 pipeline is unchanged."""
+"""Shared V2 forecast helpers; the runtime default is set in config/forecast.json."""
 
 from datetime import date, timedelta
 import importlib.util

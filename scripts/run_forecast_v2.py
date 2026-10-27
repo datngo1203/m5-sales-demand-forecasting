@@ -36,7 +36,7 @@ def fingerprint(paths):
 
 def code_hashes():
     return fingerprint([ROOT / p for p in ("code/forecast_v2.py", "code/v2_panel.py",
-        "code/13_forecasting_v1.py", "scripts/run_forecast_v2.py", "docs/review/V2_PLAN.md")])
+        "code/13_forecasting_v1.py", "scripts/run_forecast_v2.py", "config/forecast.json")])
 
 
 def spark_session():

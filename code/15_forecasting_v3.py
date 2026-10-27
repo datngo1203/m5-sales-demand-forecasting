@@ -152,7 +152,7 @@ def export(bundle,source,output,store,choice):
         "metrics":[r for r in metrics if r["item_id"]=="ALL"],
         "protocol":["V3 frozen candidate, same protocol for new stores; no test tuning",
                     "13 overlapping weekly origins in four nonoverlapping phases",
-                    "Published seed42; three-seed research metrics live in docs/review/V3_RESULTS.md",
+                    "Published seed42; three-seed benchmark in resources/v3_test_metrics.csv",
                     "Observed sales only, no inference of stockouts or latent demand"]}
     dump(output/"forecast_report.json",report)
     return report
@@ -166,9 +166,12 @@ def main():
     parser.add_argument("--panel",choices=("recent","legacy"),default="recent")
     args=parser.parse_args()
     args.input=args.input.resolve()
-    if not read(ROOT/"docs/review/V3_INTEGRATION.json")["integrate"]:
-        raise ValueError("V3 did not pass the registered integration gate")
-    choice=read(ROOT/"docs/review/V3_FROZEN.json")["choice"]
+    settings=read(ROOT/"config/forecast.json")
+    if not isinstance(settings,dict) or settings.get("enabled") is not True:
+        raise ValueError("Default forecast is disabled in config/forecast.json")
+    choice=settings.get("selected_candidate")
+    if choice not in v3.CANDIDATES:
+        raise ValueError("Unknown forecast candidate in config/forecast.json")
     bundle=obtain_bundle(args.input,args.store,args.panel,ROOT/"outputs/forecast_v3_pipeline_cache")
     report=export(bundle,args.input,args.output,args.store,choice)
     print(f"V2 {choice}: {args.store}/{args.panel}; reused={report['reused_predictions']}; seed42")

@@ -114,6 +114,7 @@ class CausalForecastTests(unittest.TestCase):
 
     def test_freeze_uses_both_panels_and_blocks_unfrozen_or_repeated_test(self):
         from argparse import Namespace
+        (ROOT / ".runtime").mkdir(exist_ok=True)
         with tempfile.TemporaryDirectory(dir=ROOT / ".runtime") as folder:
             folder = Path(folder)
             args = Namespace(output=folder)

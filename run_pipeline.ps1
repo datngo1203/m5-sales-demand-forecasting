@@ -12,7 +12,7 @@ if (-not $env:JAVA_HOME) {
 $env:PATH = "$env:JAVA_HOME/bin;$env:PATH"
 $env:SPARK_LOCAL_IP = '127.0.0.1'
 $env:PYSPARK_PYTHON = $python
-New-Item -ItemType Directory -Force outputs | Out-Null
+New-Item -ItemType Directory -Force -Path outputs, .runtime | Out-Null
 if (-not $SkipInstall) {
     & $python -m pip install -r requirements-dashboard.txt
     if ($LASTEXITCODE -ne 0) { throw 'Cai phu thuoc that bai.' }
