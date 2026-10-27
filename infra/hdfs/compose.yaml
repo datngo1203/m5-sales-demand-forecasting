@@ -1,0 +1,62 @@
+name: m5-hdfs
+services:
+  namenode:
+    image: apache/hadoop:3.4.1@sha256:69ffa97339aff768c4e6120c3fb27aa04c121402b1c8158408a5fb5be586a30e
+    hostname: namenode
+    user: root
+    entrypoint: ["/bin/bash", "-ec"]
+    command:
+      - |
+        mkdir -p /data/name
+        if [ ! -f /data/name/current/VERSION ]; then
+          hdfs namenode -format -nonInteractive
+        fi
+        exec hdfs namenode
+    environment:
+      HADOOP_CONF_DIR: /m5-conf
+    volumes:
+      - ./conf:/m5-conf:ro
+      - ./scripts:/m5-scripts:ro
+      - namenode:/data/name
+      - ../../GuiDat/data/processed_m5:/source:ro
+    ports:
+      - "127.0.0.1:9870:9870"
+    healthcheck:
+      test: ["CMD-SHELL", "hdfs dfsadmin -safemode get | grep -q 'OFF'"]
+      interval: 5s
+      timeout: 10s
+      retries: 24
+  datanode:
+    image: apache/hadoop:3.4.1@sha256:69ffa97339aff768c4e6120c3fb27aa04c121402b1c8158408a5fb5be586a30e
+    hostname: datanode
+    user: root
+    entrypoint: ["hdfs", "datanode"]
+    environment:
+      HADOOP_CONF_DIR: /m5-conf
+    volumes:
+      - ./conf:/m5-conf:ro
+      - datanode:/data/data
+    depends_on:
+      - namenode
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/127.0.0.1/9866'"]
+      interval: 5s
+      timeout: 5s
+      retries: 24
+  spark:
+    image: apache/spark:3.5.3-python3@sha256:d0f5d63bfbbffdbec08debb4911554ba671a2fa7398374db8db314d80328f576
+    user: root
+    entrypoint: ["/opt/spark/bin/spark-submit"]
+    command: ["/workspace/code/12_spark_analysis.py", "--input", "hdfs://namenode:9000/m5/processed_m5", "--output", "/workspace/outputs/analysis_hdfs"]
+    environment:
+      HADOOP_USER_NAME: root
+      SPARK_LOCAL_IP: 127.0.0.1
+    volumes:
+      - ../../code:/workspace/code:ro
+      - ../../outputs:/workspace/outputs
+    depends_on:
+      namenode:
+        condition: service_healthy
+volumes:
+  namenode:
+  datanode:

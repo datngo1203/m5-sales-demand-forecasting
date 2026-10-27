@@ -3,3 +3,4 @@ __pycache__/
 outputs/
 GuiDat/data/
 .runtime/
+output/
