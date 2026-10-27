@@ -48,6 +48,8 @@ class V3Tests(unittest.TestCase):
         origin=dates[350]
         changed=values.copy(); changed[:,351:]=1e9
         rf=runner.rf_fit(values,dates,origin,42)
+        # Keep exact causality checks independent of parallel tree-sum roundoff.
+        rf.set_params(n_jobs=1)
         for name,pred in runner.predict(rf,values,dates,origin).items():
             np.testing.assert_array_equal(pred,runner.predict(rf,changed,dates,origin)[name])
 

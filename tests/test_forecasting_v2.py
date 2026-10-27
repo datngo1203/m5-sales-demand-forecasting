@@ -42,6 +42,8 @@ class CausalForecastTests(unittest.TestCase):
         # No future target can enter fitting, even if future demand is arbitrarily large.
         self.assertLess(float(train_y.max()), 20)
         models = v2.fit_forecasters(values, dates, origin, 42)
+        # Keep exact causality checks independent of parallel tree-sum roundoff.
+        models[0].set_params(n_jobs=1)
         predictions = v2.forecast(models, values, dates, origin)
         altered = v2.forecast(models, changed, dates, origin)
         for name in runner.MODELS:
@@ -50,6 +52,7 @@ class CausalForecastTests(unittest.TestCase):
             self.assertTrue(np.isfinite(predictions[name]).all())
         # Fits must also ignore the altered future, not just inference.
         changed_models = v2.fit_forecasters(changed, dates, origin, 42)
+        changed_models[0].set_params(n_jobs=1)
         for name, pred in v2.forecast(changed_models, changed, dates, origin).items():
             np.testing.assert_array_equal(predictions[name], pred)
         for i in range(2):
